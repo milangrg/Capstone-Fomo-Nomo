@@ -8,7 +8,7 @@
 
 * [ ] Add Spring DI to the project (***All(For real)***)
 * [ ] Create models (***All***)
-* [ ] Build repositories in data layer (***developer 3***)
+* [ ] Build repositories in data layer (***ALLLLLLLLLLL!!!!!!***)
 * [ ] Add controllers and mappers (***developer 1***)
   * [ ] Add unit tests (***developer 2***)
 * [ ] Build the service layer (***developer 3***)
