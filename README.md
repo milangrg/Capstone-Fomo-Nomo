@@ -6,7 +6,7 @@
 
 ### New Development
 
-* [ ] Add Spring DI to the project (***All***)
+* [ ] Add Spring DI to the project (***All(For real)***)
 * [ ] Create models (***All***)
 * [ ] Build repositories in data layer (***developer 3***)
 * [ ] Add controllers and mappers (***developer 1***)
