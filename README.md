@@ -6,18 +6,18 @@
 
 ### New Development
 
-* [ ] Add Spring DI to the project (***All(For real)***)
-* [ ] Create models (***All***)
-* [ ] Build repositories in data layer (***ALLLLLLLLLLL!!!!!!***)
-* [ ] Add controllers and mappers (***NO BODYYYY***)
-  * [ ] Add unit tests (***developer 2***)
-* [ ] Build the service layer (***developer 3***)
-  * [ ] Add unit tests (***developer 1***)
-(***developer 3***)
-  * [ ] Add unit tests 
-* [ ] Build database
-* [ ] create react app - divide up tasks .....
-* [ ] ....
+* [ ] Add Spring DI to the project (***Milan***)
+* [ ] Create models (***Mohammed***)
+* [ ] Build database (creates) (***Milan***)
+* [ ] Create database data (inserts) (***Jenna***)
+* [ ] Build repositories in data layer (***Mohammed***)
+* [ ] Add controllers and mappers (***Milan/All***)
+  * [ ] Add unit tests (***Milan/Mohammed/Jenna***)
+* [ ] Build the service layer (***Milan***)
+  * [ ] Add unit tests (***Milan/Mohammed/Jenna***)
+* [ ] create react app (***Jenna/All***)
+
+
 
 ### Issues/Bugs
 
