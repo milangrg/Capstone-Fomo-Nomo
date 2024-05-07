@@ -17,8 +17,7 @@ public class InvitationMapper implements RowMapper<Invitation> {
         EventMapper eventMapper = new EventMapper();
         invitation.setEvent(eventMapper.mapRow(resultSet, i));
 
-        UserMapper guestMapper = new UserMapper();
-        invitation.setGuest(guestMapper.mapRow(resultSet, i));
+        invitation.setGuestId(resultSet.getInt("guest_id"));
 
         invitation.setStatus(Status.findByName(resultSet.getString("status")));
 
