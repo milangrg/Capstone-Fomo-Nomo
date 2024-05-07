@@ -26,8 +26,6 @@ public class EventJdbcTemplateRepository implements EventRepository{
 
     @Override
     public List<Event> findAll() {
-//        final String sql = "select event_id, user_id, title, description, location_id, event_type, start, end "
-//                + "from `event`;";
 
             final String sql = "select event_id, "
                     + "e.user_id, u.first_name, u.last_name, u.email, u.phone, u.dob, "
@@ -43,8 +41,14 @@ public class EventJdbcTemplateRepository implements EventRepository{
     @Override
     @Transactional
     public Event findById(int eventId) {
-        final String sql = "select event_id, user_id, title, description, location_id, event_type, start, end "
-                + "from event "
+        final String sql = "select event_id, "
+                + "e.user_id, u.first_name, u.last_name, u.email, u.phone, u.dob, "
+                + "title, description, "
+                + "e.location_id, l.address, l.state, l.city, l.postal, l.location_name, "
+                + "event_type, `start`, `end` "
+                + "from event e "
+                + "inner join `user` u on u.user_id = e.user_id "
+                + "inner join location l on l.location_id = e.location_id "
                 + "where event_id = ?;";
 
         Event result = jdbcTemplate.query(sql,new EventMapper(),eventId).stream()
@@ -78,32 +82,33 @@ public class EventJdbcTemplateRepository implements EventRepository{
         event.setEventId(keyHolder.getKey().intValue());
         return event;
 
-
     }
 
     @Override
-    public boolean update(int eventId) {
+    public boolean update(Event event) {
         final String sql = "update event set "
                 + "title = ?, "
-                + "description = ? "
-                + "location_id = ? "
-                + "event_type = ? "
-                + "start = ? "
+                + "description = ?, "
+                + "location_id = ?, "
+                + "event_type = ?, "
+                + "start = ?, "
                 + "end = ? "
                 + "where event_id = ?";
 
-        Event event = findById(eventId);
         return jdbcTemplate.update(sql,
                 event.getTitle(),
                 event.getDescription(),
                 event.getLocation().getLocationId(),
-                event.getEventType(),
+                event.getEventType().getName(),
                 event.getStart(),
-                event.getEnd()) > 0;
+                event.getEnd(),
+                event.getEventId()) > 0;
     }
 
     @Override
+    @Transactional
     public boolean delete(int eventId) {
+        jdbcTemplate.update("delete from invitation where event_id = ?",eventId);
         return jdbcTemplate.update("delete from event where event_id = ?",eventId) > 0;
     }
 }

@@ -8,7 +8,7 @@ public interface EventRepository {
     List<Event> findAll();
     Event findById(int eventId);
     Event add(Event event);
-    boolean update(int eventId);
+    boolean update(Event event);
     boolean delete(int eventId);
 
 
