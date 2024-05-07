@@ -23,14 +23,14 @@ create table location(
 create table `event`(
 	event_id int primary key auto_increment,
 	title varchar(50) not null,
-    host_id int not null,
+    user_id int not null,
 	`description` varchar(250) null,
     location_id int not null,
     event_type varchar(50) not null,
     `start` datetime not null,
     `end` datetime not null,
-	constraint fk_event_host_id
-		foreign key (host_id)
+	constraint fk_event_user_id
+		foreign key (user_id)
         references `user`(user_id),
 	constraint fk_event_location_id
 		foreign key (location_id)
@@ -40,13 +40,13 @@ create table `event`(
 create table invitation(
 	invitation_id int primary key auto_increment,
     event_id int not null,
-    guest_id int not null,
+    user_id int not null,
     `status` varchar(20) not null,
 	constraint fk_invitation_event_id
 		foreign key (event_id)
         references `event`(event_id),
-	constraint fk_invitation_guest_id
-		foreign key (guest_id)
+	constraint fk_invitation_user_id
+		foreign key (user_id)
         references `user`(user_id)
 );
 
@@ -91,7 +91,7 @@ values
     (12, '7700 Avenue Street', 'NJ', 'Newark', '07101', '');
 
 insert into `event` 
-	(event_id, host_id, title, `description`, location_id, event_type, `start`, `end`)
+	(event_id, user_id, title, `description`, location_id, event_type, `start`, `end`)
 values
 	(1, 4, 'Going Away Party', 'I am moving somewhere else, so come see me off!', 3, 'Social', '2024-05-17 20:00:00', '2024-05-17 23:59:00'),
     (2, 1, 'Appointment with Dr. Jones', '', 12, 'Appointment', '2024-05-30 11:30:00', '2024-05-30 13:00:00'),
@@ -101,7 +101,7 @@ values
     (6, 5, 'Escape Room Party', 'The new escape room opened up...we should check it out!', 9, 'Social', '2024-05-13 18:00:00', '2024-05-13 20:00:00');
 
 insert into invitation 
-	(invitation_id, event_id, guest_id, `status`)
+	(invitation_id, event_id, user_id, `status`)
 values
 	(1, 1, 1, 'Accepted'),
     (2, 1, 2, 'Declined'),

@@ -23,7 +23,7 @@ public class InvitationJdbcTemplateRepository implements InvitationRepository {
     @Override
     public List<Invitation> findAll() {
 
-        final String sql = "select invitation_id, event_id, guest_id, `status` "
+        final String sql = "select invitation_id, event_id, user_id, `status` "
                 + "from invitation limit 1000;";
 
         return jdbcTemplate.query(sql, new InvitationMapper());
@@ -32,7 +32,7 @@ public class InvitationJdbcTemplateRepository implements InvitationRepository {
     @Override
     public Invitation findById(int invitationId) {
 
-        final String sql = "select invitation_id, event_id, guest_id, `status` "
+        final String sql = "select invitation_id, event_id, user_id, `status` "
                 + "from invitation "
                 + "where invitation_id = ?;";
 
@@ -43,7 +43,7 @@ public class InvitationJdbcTemplateRepository implements InvitationRepository {
     @Override
     public Invitation add(Invitation invitation) {
 
-        final String sql = "insert into invitation (event_id, guest_id, `status`) "
+        final String sql = "insert into invitation (event_id, user_id, `status`) "
                 + "values (?, ?, ?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -68,7 +68,7 @@ public class InvitationJdbcTemplateRepository implements InvitationRepository {
 
         final String sql = "update invitation set "
                 + "event_id = ?, "
-                + "guest_id = ?, "
+                + "user_id = ?, "
                 + "`status` = ? "
                 + "where invitation_id = ?;";
 

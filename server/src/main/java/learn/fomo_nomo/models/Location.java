@@ -1,5 +1,7 @@
 package learn.fomo_nomo.models;
 
+import java.util.Objects;
+
 public class Location {
     private int locationId;
     private String address;
@@ -62,6 +64,19 @@ public class Location {
 
     public String getLocationName() {
         return locationName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return locationId == location.locationId && Objects.equals(address, location.address) && Objects.equals(state, location.state) && Objects.equals(city, location.city) && Objects.equals(postal, location.postal) && Objects.equals(locationName, location.locationName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(locationId, address, state, city, postal, locationName);
     }
 
     public void setLocationName(String locationName) {

@@ -29,7 +29,7 @@ public class UserJdbcTemplateRepository implements UserRepository {
     public List<User> findAll() {
 
         final String sql = "select user_id, first_name, last_name, email, phone, dob "
-                + "from `user` limit 1000;";
+                + "from `user`;";
         return jdbcTemplate.query(sql, new UserMapper());
     }
 
@@ -97,7 +97,7 @@ public class UserJdbcTemplateRepository implements UserRepository {
     @Transactional
     public boolean deleteById(int userId) {
         // events where user is guest
-        jdbcTemplate.update("delete from invitation where guest_id = ?;", userId);
+        jdbcTemplate.update("delete from invitation where user_id = ?;", userId);
 
         // events where user is the host
         List<Integer> eventList = findEventsByUserId(userId);
@@ -113,9 +113,9 @@ public class UserJdbcTemplateRepository implements UserRepository {
 
     private List<Integer> findEventsByUserId(int userId) {
 
-        final String sql = "select event_id, host_id, title, description, location_id, event_type, start, end " +
+        final String sql = "select event_id, user_id, title, description, location_id, event_type, start, end " +
                 "from `event` " +
-                "where host_id = ?;";
+                "where user_id = ?;";
 
         return jdbcTemplate.query(sql, new EventMapper(), userId).stream()
                 .map(Event::getEventId)
