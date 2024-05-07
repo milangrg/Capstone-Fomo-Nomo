@@ -6,6 +6,7 @@ import learn.fomo_nomo.models.EventType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -14,6 +15,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
 
+@Repository
 public class EventJdbcTemplateRepository implements EventRepository{
 
     private final JdbcTemplate jdbcTemplate;
@@ -24,7 +26,7 @@ public class EventJdbcTemplateRepository implements EventRepository{
 
     @Override
     public List<Event> findAll() {
-        final String sql = "select event_id, host_id, title, description, location_id, event_type, start, end "
+        final String sql = "select event_id, user_id, title, description, location_id, event_type, start, end "
                 + "from event;";
         return jdbcTemplate.query(sql,new EventMapper());
     }
@@ -32,7 +34,7 @@ public class EventJdbcTemplateRepository implements EventRepository{
     @Override
     @Transactional
     public Event findById(int eventId) {
-        final String sql = "select event_id, host_id, title, description, location_id, event_type, start, end "
+        final String sql = "select event_id, user_id, title, description, location_id, event_type, start, end "
                 + "from event "
                 + "where event_id = ?;";
 
@@ -44,7 +46,7 @@ public class EventJdbcTemplateRepository implements EventRepository{
 
     @Override
     public Event add(Event event) {
-        final String sql = "insert into event (host_id, title, description, location_id, event_type, start, end)"
+        final String sql = "insert into event (user_id, title, description, location_id, event_type, start, end)"
                 + "values (?,?,?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
