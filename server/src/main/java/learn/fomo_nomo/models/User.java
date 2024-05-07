@@ -1,6 +1,7 @@
 package learn.fomo_nomo.models;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class User {
     private int userId;
@@ -70,4 +71,29 @@ public class User {
         this.dob = dob;
     }
 
+    // Used for testing
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId == user.userId && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(phone, user.phone) && Objects.equals(dob, user.dob);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, firstName, lastName, email, phone, dob);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", dob=" + dob +
+                '}';
+    }
 }

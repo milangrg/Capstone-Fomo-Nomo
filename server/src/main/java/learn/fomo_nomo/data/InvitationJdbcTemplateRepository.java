@@ -5,11 +5,13 @@ import learn.fomo_nomo.models.Invitation;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 
+@Repository
 public class InvitationJdbcTemplateRepository implements InvitationRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -22,7 +24,7 @@ public class InvitationJdbcTemplateRepository implements InvitationRepository {
     public List<Invitation> findAll() {
 
         final String sql = "select invitation_id, event_id, guest_id, `status` "
-                + "from `invitation` limit 1000;";
+                + "from invitation limit 1000;";
 
         return jdbcTemplate.query(sql, new InvitationMapper());
     }

@@ -20,4 +20,14 @@ public enum Status {
     public String getName() {
         return name;
     }
+
+    public static Status findByName(String name) {
+        for (Status status : Status.values()) {
+            if (status.getName().equalsIgnoreCase(name)) {
+                return status;
+            }
+        }
+        String message = String.format("No status with name: %s.", name);
+        throw new RuntimeException(message);
+    }
 }

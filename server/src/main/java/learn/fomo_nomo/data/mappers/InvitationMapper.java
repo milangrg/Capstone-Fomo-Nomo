@@ -20,7 +20,7 @@ public class InvitationMapper implements RowMapper<Invitation> {
         UserMapper guestMapper = new UserMapper();
         invitation.setGuest(guestMapper.mapRow(resultSet, i));
 
-        invitation.setStatus(Status.valueOf(resultSet.getString("status")));
+        invitation.setStatus(Status.findByName(resultSet.getString("status")));
 
         return invitation;
     }
