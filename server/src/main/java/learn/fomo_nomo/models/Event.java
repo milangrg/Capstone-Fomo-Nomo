@@ -5,12 +5,13 @@ import java.time.LocalDateTime;
 public class Event {
     private int eventId;
     private User host;
+    private String title;
     private String description;
     private Location location;
     private EventType eventType;
     private LocalDateTime start;
     private LocalDateTime end;
-    private String title;
+
 
     public Event() {
     }

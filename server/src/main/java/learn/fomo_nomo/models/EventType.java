@@ -22,5 +22,15 @@ public enum EventType {
         return name;
     }
 
+    public static EventType findByName(String name) {
+        for (EventType type : EventType.values()) {
+            if (type.getName().equalsIgnoreCase(name)) {
+                return type;
+            }
+        }
+        String message = String.format("No event type with name: %s.", name);
+        throw new RuntimeException(message);
+    }
+
 
 }
