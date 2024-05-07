@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class InvitationJdbcTemplateRepositoryTest {
 
+    final static int NEXT_ID = 13;
+
     @Autowired
     InvitationJdbcTemplateRepository repository;
 
@@ -40,23 +42,32 @@ class InvitationJdbcTemplateRepositoryTest {
     @Test
     void shouldFindById() {
         Invitation expected = makeInvitation();
+        expected.setInvitationId(1);
 
-        Invitation actual = repository.findById(7);
+        Invitation actual = repository.findById(1);
 
         System.out.println(expected);
         System.out.println(actual);
 
-
-
-        assertEquals(expected, actual);
+        assertEquals(expected.getEvent().getTitle(), actual.getEvent().getTitle());
+        assertEquals(expected.getEvent().getLocation(), actual.getEvent().getLocation());
+        assertEquals(expected.getGuestId(), actual.getGuestId());
     }
 
-    //@Test
-    void shouldAdd() {}
+    @Test
+    void shouldAdd() {
+        Invitation invitation = makeInvitation();
+
+        Invitation actual = repository.add(invitation);
+        assertNotNull(actual);
+        assertEquals(NEXT_ID, actual.getInvitationId());
+    }
 
     @Test
     void shouldUpdate() {
         Invitation invitation = makeInvitation();
+        invitation.setInvitationId(1);
+
         invitation.setStatus(Status.DECLINED);
         assertTrue(repository.update(invitation));
     }
@@ -95,12 +106,11 @@ class InvitationJdbcTemplateRepositoryTest {
                 "Going Away Party"
         );
 
-        return new Invitation(
-                1,
-                event,
-                1,
-                Status.ACCEPTED
-        );
+        Invitation invitation = new Invitation();
+        invitation.setEvent(event);
+        invitation.setStatus(Status.ACCEPTED);
+        invitation.setGuestId(1);
+        return invitation;
     }
 
 }

@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class LocationJdbcTemplateRepositoryTest {
 
+    final static int NEXT_ID = 13;
+
     @Autowired
     LocationJdbcTemplateRepository repository;
 
@@ -26,8 +28,6 @@ class LocationJdbcTemplateRepositoryTest {
 
     @Test
     void shouldFindById() {
-        // 	(location_id, address, state, city, postal, location_name)
-        //     (1, '3300 Riverfront Walk', 'NY', 'Buffalo', '14202', 'Riverside Restaurant'),
         Location expected = new Location(
                 1,
                 "3300 Riverfront Walk",
@@ -41,6 +41,38 @@ class LocationJdbcTemplateRepositoryTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void shouldAdd() {
+        Location location = new Location();
+        location.setAddress("123");
+        location.setCity("Seattle");
+        location.setState("WA");
+        location.setPostal("45678");
 
+        Location actual = repository.add(location);
+        assertNotNull(actual);
+        assertEquals(NEXT_ID, actual.getLocationId());
+    }
+
+    @Test
+    void shouldUpdate() {
+        Location location = makeLocation();
+        location.setLocationName("TESTING location name...");
+
+        assertTrue(repository.update(location));
+        Location actual = repository.findById(2);
+        assertEquals(location.getLocationName(), actual.getLocationName());
+    }
+
+    private Location makeLocation() {
+        return new Location(
+                2,
+                "1020 Sunshine Blvd",
+                "NY",
+                "Rochester",
+                "14602",
+                null
+        );
+    }
 
 }

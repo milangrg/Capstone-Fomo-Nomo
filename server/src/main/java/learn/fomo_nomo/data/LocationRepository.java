@@ -1,10 +1,11 @@
 package learn.fomo_nomo.data;
 
 import learn.fomo_nomo.models.Location;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface LocationRepository {
     Location findById(int locationId);
     Location add(Location location);
     boolean update(Location location);
-    boolean delete(int locationId);
+    boolean deleteById(int locationId);
 }
