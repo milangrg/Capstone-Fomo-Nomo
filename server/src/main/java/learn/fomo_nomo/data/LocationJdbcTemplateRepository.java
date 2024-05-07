@@ -1,14 +1,17 @@
 package learn.fomo_nomo.data;
 
 import learn.fomo_nomo.data.mappers.LocationMapper;
+import learn.fomo_nomo.models.Event;
 import learn.fomo_nomo.models.Location;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class LocationJdbcTemplateRepository implements LocationRepository{
@@ -29,17 +32,17 @@ public class LocationJdbcTemplateRepository implements LocationRepository{
 
     @Override
     public Location add(Location location) {
-        final String sql = " insert into location (address, city, state, postal, location_name)"
-                + "values ?,?,?,?,?);";
+        final String sql = " insert into location (address, city, state, postal, location_name) "
+                + "values (?,?,?,?,?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(2,location.getAddress());
-            ps.setString(3,location.getCity());
-            ps.setString(4,location.getState());
-            ps.setString(5,location.getPostal());
-            ps.setString(6,location.getLocationName());
+            ps.setString(1,location.getAddress());
+            ps.setString(2,location.getCity());
+            ps.setString(3,location.getState());
+            ps.setString(4,location.getPostal());
+            ps.setString(5,location.getLocationName());
             return ps;
         },keyHolder);
 
@@ -54,24 +57,28 @@ public class LocationJdbcTemplateRepository implements LocationRepository{
     @Override
     public boolean update(Location location) {
         final String sql = "Update location set "
-                +"address = ?, "
-                +"city = ?, "
-                +"state = ?, "
-                +"postal = ?, "
-                +"location_name = ?;";
+                + "address = ?, "
+                + "city = ?, "
+                + "state = ?, "
+                + "postal = ?, "
+                + "location_name = ? "
+                + "where location_id = ?;";
 
         return jdbcTemplate.update(sql,
                 location.getAddress(),
                 location.getCity(),
                 location.getState(),
                 location.getPostal(),
-                location.getLocationName()) > 0;
-
-
+                location.getLocationName(),
+                location.getLocationId()) > 0;
     }
 
     @Override
-    public boolean delete(int locationId) {
-        return jdbcTemplate.update("delete from location where location_id = ?" , locationId) > 0;
+    public boolean deleteById(int locationId) {
+        // events where location is referenced
+        // we might not be using this delete function at all
+
+        return jdbcTemplate.update("delete from location where location_id = ?;" , locationId) > 0;
     }
+
 }
