@@ -1,15 +1,13 @@
 package learn.fomo_nomo.data;
 
-import learn.fomo_nomo.models.Event;
-import learn.fomo_nomo.models.Invitation;
-import learn.fomo_nomo.models.Status;
-import learn.fomo_nomo.models.User;
+import learn.fomo_nomo.models.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,8 +37,19 @@ class InvitationJdbcTemplateRepositoryTest {
         assertTrue(invitations.size() >= 11 && invitations.size() <= 13);
     }
 
-    //@Test
-    void shouldFindById() {}
+    @Test
+    void shouldFindById() {
+        Invitation expected = makeInvitation();
+
+        Invitation actual = repository.findById(7);
+
+        System.out.println(expected);
+        System.out.println(actual);
+
+
+
+        assertEquals(expected, actual);
+    }
 
     //@Test
     void shouldAdd() {}
@@ -59,15 +68,37 @@ class InvitationJdbcTemplateRepositoryTest {
     }
 
     private Invitation makeInvitation() {
-        User user = new User();
-        user.setUserId(1);
-        Event event = new Event();
-        event.setEventId(1);
+        User host = new User(
+                4,
+                "Jimmy",
+                "Fisher",
+                "gonefishin889@yahoo2.com",
+                "555-555-7895",
+                LocalDate.of(1989, 5, 10)
+        );
+        Location location = new Location(
+                3,
+                "720 Party Lane",
+                "NY",
+                "Syracuse",
+                "13201",
+                "Party Central"
+        );
+        Event event = new Event(
+                1,
+                host,
+                "I am moving somewhere else, so come see me off!",
+                location,
+                EventType.SOCIAL,
+                LocalDateTime.of(2024,5,17,20,0,0),
+                LocalDateTime.of(2024,5,17,23,59,0),
+                "Going Away Party"
+        );
 
         return new Invitation(
                 1,
                 event,
-                user,
+                1,
                 Status.ACCEPTED
         );
     }

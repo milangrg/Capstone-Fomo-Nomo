@@ -1,6 +1,7 @@
 package learn.fomo_nomo.models;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Event {
     private int eventId;
@@ -96,5 +97,32 @@ public class Event {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return eventId == event.eventId && Objects.equals(host, event.host) && Objects.equals(title, event.title) && Objects.equals(description, event.description) && Objects.equals(location, event.location) && eventType == event.eventType && Objects.equals(start, event.start) && Objects.equals(end, event.end);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(eventId, host, title, description, location, eventType, start, end);
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "eventId=" + eventId +
+                ", host=" + host +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", location=" + location +
+                ", eventType=" + eventType +
+                ", start=" + start +
+                ", end=" + end +
+                '}';
     }
 }
