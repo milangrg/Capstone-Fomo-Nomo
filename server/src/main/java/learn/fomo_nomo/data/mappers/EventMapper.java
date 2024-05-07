@@ -13,15 +13,18 @@ public class EventMapper implements RowMapper<Event> {
     @Override
     public Event mapRow(ResultSet resultSet, int i) throws SQLException {
         Event event = new Event();
-        UserMapper hostMapper = new UserMapper();
-        LocationMapper locationMapper = new LocationMapper();
-
         event.setEventId(resultSet.getInt("event_id"));
+
+        UserMapper hostMapper = new UserMapper();
         event.setHost(hostMapper.mapRow(resultSet,i));
+
         event.setTitle(resultSet.getString("title"));
         event.setDescription(resultSet.getString("description"));
+
+        LocationMapper locationMapper = new LocationMapper();
         event.setLocation(locationMapper.mapRow(resultSet, i));
-        event.setEventType(EventType.valueOf(resultSet.getString("event_type")));
+
+        event.setEventType(EventType.findByName(resultSet.getString("event_type")));
         event.setStart(resultSet.getTimestamp("start").toLocalDateTime());
         event.setEnd(resultSet.getTimestamp("end").toLocalDateTime());
 
