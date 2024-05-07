@@ -22,13 +22,13 @@ create table location(
 
 create table `event`(
 	event_id int primary key auto_increment,
-	title varchar(50) null,
+	title varchar(50) not null,
     host_id int not null,
 	`description` varchar(250) null,
     location_id int not null,
     event_type varchar(50) not null,
     `start` datetime not null,
-    `end` datetime null,
+    `end` datetime not null,
 	constraint fk_event_host_id
 		foreign key (host_id)
         references `user`(user_id),
@@ -49,4 +49,3 @@ create table invitation(
 		foreign key (guest_id)
         references `user`(user_id)
 );
-
