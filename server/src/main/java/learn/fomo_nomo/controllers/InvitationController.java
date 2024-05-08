@@ -2,13 +2,16 @@ package learn.fomo_nomo.controllers;
 
 import learn.fomo_nomo.domain.InvitationService;
 import learn.fomo_nomo.domain.Result;
+import learn.fomo_nomo.models.Event;
 import learn.fomo_nomo.models.Invitation;
+import learn.fomo_nomo.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -24,6 +27,20 @@ public class InvitationController {
     @GetMapping("/invites/{userId}")
     public List<Invitation> findAll(@PathVariable int userId) {
         return service.findAll(userId);
+    }
+
+    // return list of events where user is hosting and invited as accepted;
+    @GetMapping("/{userId}")
+    public ResponseEntity<Object> getEventsForUser(@PathVariable int userId) {
+
+        List<Event> events = service.findAllAcceptedInvitationByGuestId(userId)
+                .stream()
+                .map(Invitation::getEvent)
+                .collect(Collectors.toList());
+
+        events.addAll(service.findAllEventByHosId(userId));
+
+        return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
     // Single Add
@@ -65,6 +82,18 @@ public class InvitationController {
         }
 
         return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
+    }
+
+    // Check-Conflict for list of guest
+    @PostMapping("/conflict/{userId}")
+    public ResponseEntity<Object> validateForConflicts(@PathVariable int userId, @RequestBody List<Invitation> invitationList) {
+        if (userId != invitationList.get(0).getEvent().getHost().getUserId()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+        // send invitationList to invitationService to validate
+        List<User> conflictedGuests = service.validateConflictsForGuests(invitationList);
+        return new ResponseEntity<>(conflictedGuests, HttpStatus.OK);
     }
 
     @PutMapping("/{invitationId}")
