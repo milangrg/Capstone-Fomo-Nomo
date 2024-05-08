@@ -27,6 +27,16 @@ class LocationJdbcTemplateRepositoryTest {
     }
 
     @Test
+    void shouldFindAll() {
+        List<Location> locations = repository.fillAll();
+        assertNotNull(locations);
+
+        // can't predict order
+        // if add is first, we may go as high as 13
+        assertTrue(locations.size() >= 12 && locations.size() <= 13);
+    }
+
+    @Test
     void shouldFindById() {
         Location expected = new Location(
                 1,
