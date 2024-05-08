@@ -69,7 +69,7 @@ class EventJdbcTemplateRepositoryTest {
 
     @Test
     void shouldUpdate(){
-        Event event = repository.findById(1);
+        Event event = repository.findById(3);
         Location location = new Location(1, "3300 Riverfront Walk", "NY", "Buffalo", "14202", "Riverside Restaurant");
         event.setTitle("Test");
         event.setDescription("This is a test for update");
@@ -80,16 +80,16 @@ class EventJdbcTemplateRepositoryTest {
 
         boolean actual = repository.update(event);
         assertTrue(actual);
-        Event updatedEvent = repository.findById(1);
-        assertEquals(repository.findById(1).getTitle(),"Test");
+        Event updatedEvent = repository.findById(3);
+        assertEquals(updatedEvent.getTitle(),"Test");
 
     }
 
     @Test
     void shouldDelete(){
-        boolean actual = repository.delete(1);
+        boolean actual = repository.delete(4);
         assertTrue(actual);
-        assertNull(repository.findById(1));
+        assertNull(repository.findById(4));
     }
 
 
