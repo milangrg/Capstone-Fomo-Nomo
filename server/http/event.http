@@ -1,0 +1,80 @@
+@url = http://localhost:8080/api/event
+
+GET {{url}} HTTP/1.1
+
+### Specific events from the hose
+
+GET {{url}}/user/2 HTTP/1.1
+
+### 
+
+GET {{url}}/user/99 HTTP/1.1
+
+### Adding Event 
+
+POST {{url}}/event/2 HTTP/1.1
+Content-Type: application/json
+
+{
+   "host": {
+      "userId": 2,
+      "firstName": "Marjorie",
+      "lastName": "Pierce",
+      "email": "margiep54@emailspot.com",
+      "phone": "555-555-2216",
+      "dob": "1954-02-19"
+    },
+    "title": "Test",
+    "description": "This is a test for add",
+    "location": {
+      "locationId": 12,
+      "address": "7700 Avenue Street",
+      "state": "NJ",
+      "city": "Newark",
+      "postal": "07101",
+      "locationName": ""
+    },
+    "eventType": "APPOINTMENT",
+    "start": "2024-05-30T07:30:00",
+    "end": "2024-05-30T09:00:00"
+}
+
+### 
+
+PUT {{url}}/7 HTTP/1.1
+Content-Type: application/json
+
+{
+    "eventId": 7,
+    "host": {
+        "userId": 2,
+        "firstName": "Marjorie",
+        "lastName": "Pierce",
+        "email": "margiep54@emailspot.com",
+        "phone": "555-555-2216",
+        "dob": "1954-02-19"
+    },
+    "title": "Testing Update",
+    "description": "This is a test for update",
+    "location": {
+        "locationId": 12,
+        "address": "7700 Avenue Street",
+        "state": "NJ",
+        "city": "Newark",
+        "postal": "07101",
+        "locationName": ""
+    },
+    "eventType": "SOCIAL",
+    "start": "2024-05-30T08:30:00",
+    "end": "2024-05-30T09:00:00"
+}
+
+
+###
+
+DELETE {{url}}/7 HTTP/1.1
+
+
+
+
+
