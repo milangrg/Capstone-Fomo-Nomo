@@ -1,0 +1,144 @@
+@url = http://localhost:8080/api/invitation
+
+### get all invites where userId 1 is guest -> [200]
+
+GET {{url}}/invites/5 HTTP/1.1
+
+### add an single invitation
+
+POST {{url}}/invite/9 HTTP/1.1
+Content-Type: application/json
+
+{
+    "event": {
+      "eventId": 3,
+      "host": {
+        "userId": 9,
+        "firstName": "Viola",
+        "lastName": "Reynolds",
+        "email": "vr11_@yahoo2.com",
+        "phone": "555-555-9999",
+        "dob": "1989-05-19"
+      },
+      "title": "Work Happy Hour",
+      "description": "Meet for happy hour drinks and food",
+      "location": {
+        "locationId": 1,
+        "address": "3300 Riverfront Walk",
+        "state": "NY",
+        "city": "Buffalo",
+        "postal": "14202",
+        "locationName": "Riverside Restaurant"
+      },
+      "eventType": "WORK",
+      "start": "2024-05-21T10:00:00",
+      "end": "2024-05-21T13:00:00"
+    },
+    "guestId": 5,
+    "status": "PENDING"
+}
+
+### bulk add
+
+POST {{url}}/invites/1 HTTP/1.1
+Content-Type: application/json
+
+[
+  {
+    "event": {
+      "eventId": 5,
+      "host": {
+        "userId": 1,
+        "firstName": "Alex",
+        "lastName": "Carter",
+        "email": "acarter1234@emailspot.com",
+        "phone": "555-555-1234",
+        "dob": "1995-08-02"
+      },
+      "title": "Golf Outing",
+      "description": "It is time for our annual golf tourament!",
+      "location": {
+        "locationId": 7,
+        "address": "1550 Golf Path",
+        "state": "NY",
+        "city": "Saratoga Springs",
+        "postal": "12866",
+        "locationName": "The Golf Emporium"
+      },
+      "eventType": "SOCIAL",
+      "start": "2024-05-11T01:00:00",
+      "end": "2024-05-11T05:00:00"
+    },
+    "guestId": 4,
+    "status": "PENDING"
+  },
+  {
+    "event": {
+      "eventId": 5,
+      "host": {
+        "userId": 1,
+        "firstName": "Alex",
+        "lastName": "Carter",
+        "email": "acarter1234@emailspot.com",
+        "phone": "555-555-1234",
+        "dob": "1995-08-02"
+      },
+      "title": "Golf Outing",
+      "description": "It is time for our annual golf tourament!",
+      "location": {
+        "locationId": 7,
+        "address": "1550 Golf Path",
+        "state": "NY",
+        "city": "Saratoga Springs",
+        "postal": "12866",
+        "locationName": "The Golf Emporium"
+      },
+      "eventType": "SOCIAL",
+      "start": "2024-05-11T01:00:00",
+      "end": "2024-05-11T05:00:00"
+    },
+    "guestId": 5,
+    "status": "PENDING"
+  }
+]
+
+### update invitationId 7
+
+PUT {{url}}/7 HTTP/1.1
+Content-Type: application/json
+
+{
+    "invitationId": 7,
+    "event": {
+      "eventId": 3,
+      "host": {
+        "userId": 9,
+        "firstName": "Viola",
+        "lastName": "Reynolds",
+        "email": "vr11_@yahoo2.com",
+        "phone": "555-555-9999",
+        "dob": "1989-05-19"
+      },
+      "title": "Work Happy Hour",
+      "description": "Meet for happy hour drinks and food",
+      "location": {
+        "locationId": 1,
+        "address": "3300 Riverfront Walk",
+        "state": "NY",
+        "city": "Buffalo",
+        "postal": "14202",
+        "locationName": "Riverside Restaurant"
+      },
+      "eventType": "WORK",
+      "start": "2024-05-21T10:00:00",
+      "end": "2024-05-21T13:00:00"
+    },
+    "guestId": 1,
+    "status": "DECLINED"
+}
+
+### delete invitationId 12 -> [204]
+
+DELETE {{url}}/12 HTTP/1.1
+
+### 
