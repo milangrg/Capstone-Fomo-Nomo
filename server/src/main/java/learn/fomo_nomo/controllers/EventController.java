@@ -33,7 +33,7 @@ public class EventController {
 //        return service.findByEventId(eventId);
 //    }
 
-    @GetMapping("user/{userId}")
+    @GetMapping("/user/{userId}")
     public List<Event> findHostEventsByHostId(@PathVariable int userId){
         return eventService.findHostEventsByHostId(userId);
     }

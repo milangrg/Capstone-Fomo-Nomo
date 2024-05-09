@@ -131,8 +131,8 @@ public class InvitationService {
                     result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
                     return result;
                 }
-                if (event.getEnd().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())
-                        && event.getStart().isBefore(currEvent.getEnd())) {
+                if (currEvent.getEventId() != event.getEventId() && event.getEnd().isAfter(currEvent.getStart())
+                        && event.getEnd().isBefore(currEvent.getEnd())) {
                     result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
                     return result;
                 }
