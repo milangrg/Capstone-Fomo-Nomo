@@ -121,7 +121,10 @@ public class EventService {
             result.addMessage("Start must take place in the future",ResultType.INVALID);
         }
 
-        List<Event> allHostedEvents = findHostEventsByHostId(event.getHost().getUserId());
+        List<Event> allHostedEvents = findHostEventsByHostId(event.getHost().getUserId())
+                .stream()
+                .filter(e -> e.getEventId() != event.getEventId())
+                .collect(Collectors.toList());
 
         for (Event currEvent : allHostedEvents){
             if(event.getEventId() == currEvent.getEventId()){
