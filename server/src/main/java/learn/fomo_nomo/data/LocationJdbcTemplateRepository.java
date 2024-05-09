@@ -20,7 +20,7 @@ public class LocationJdbcTemplateRepository implements LocationRepository{
     public LocationJdbcTemplateRepository(JdbcTemplate jdbcTemplate){this.jdbcTemplate = jdbcTemplate;}
 
     @Override
-    public List<Location> fillAll() {
+    public List<Location> findAll() {
         final String sql = "select location_id, address, city, state, postal, location_name "
                 + "from location; ";
 

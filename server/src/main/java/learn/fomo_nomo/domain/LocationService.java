@@ -16,11 +16,15 @@ public class LocationService {
     }
 
     public List<Location> findAll() {
-        return repository.fillAll();
+        return repository.findAll();
     }
 
     public Location findById(int locationId) {
         return repository.findById(locationId);
+    }
+
+    public Location checkIfExist(Location location){
+        return checkIfInputExists(location);
     }
 
     public Result<Location> add(Location location) {
@@ -85,6 +89,20 @@ public class LocationService {
 
         // null postal is fine in schema
         return result;
+    }
+
+    private Location checkIfInputExists(Location location){
+        List<Location> allLocations = findAll();
+        for (Location currentLocation : allLocations){
+            if(location.getAddress().equalsIgnoreCase(currentLocation.getAddress()) &&
+                location.getCity().equalsIgnoreCase(currentLocation.getCity()) &&
+                location.getState().equalsIgnoreCase(currentLocation.getState()) &&
+                location.getPostal().equalsIgnoreCase(currentLocation.getPostal())&&
+                location.getLocationName().equalsIgnoreCase(currentLocation.getLocationName())){
+                    return currentLocation;
+            }
+        }
+        return null;
     }
 
 }
