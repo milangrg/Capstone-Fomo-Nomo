@@ -114,7 +114,7 @@ public class EventService {
         }
 
         if (event.getStart().isAfter(event.getEnd()) || event.getStart().equals(event.getEnd())){
-            result.addMessage("Start must be before event",ResultType.INVALID);
+            result.addMessage("Start must be before End time",ResultType.INVALID);
         }
 
         if (event.getStart().isBefore(LocalDateTime.now())){

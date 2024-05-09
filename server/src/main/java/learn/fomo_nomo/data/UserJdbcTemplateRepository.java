@@ -25,6 +25,16 @@ public class UserJdbcTemplateRepository implements UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
+    public List<User> findAllExceptHost(int userId) {
+
+        final String sql = "select user_id, first_name, last_name, email, phone, dob "
+                + "from `user` "
+                + "where user_id != ?;";
+        return jdbcTemplate.query(sql, new UserMapper(),userId);
+    }
+
+
     @Override
     public List<User> findAll() {
 

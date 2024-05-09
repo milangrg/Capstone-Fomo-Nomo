@@ -17,4 +17,6 @@ public interface UserRepository {
 
     @Transactional
     boolean deleteById(int userId);
+
+    List<User> findAllExceptHost(int userId);
 }
