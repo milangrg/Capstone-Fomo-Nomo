@@ -28,7 +28,7 @@ class LocationJdbcTemplateRepositoryTest {
 
     @Test
     void shouldFindAll() {
-        List<Location> locations = repository.fillAll();
+        List<Location> locations = repository.findAll();
         assertNotNull(locations);
 
         // can't predict order

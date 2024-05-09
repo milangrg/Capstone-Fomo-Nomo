@@ -27,7 +27,7 @@ class LocationServiceTest {
         List<Location> expected = new ArrayList<>();
         expected.add(makeLocation());
 
-        when(repository.fillAll()).thenReturn(expected);
+        when(repository.findAll()).thenReturn(expected);
         List<Location> actual = service.findAll();
         assertEquals(expected, actual);
     }
