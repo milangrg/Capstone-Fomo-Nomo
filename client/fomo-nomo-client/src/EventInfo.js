@@ -156,10 +156,22 @@ const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
             {editMode ? (
                 <EventForm event={event} onClose={onClose} />
             ) : (
+                
                 <div className='event-info'>
+                    
                     <div className='event-data'>
+                    {errors.length > 0 && (
+                            <div className='alert-error-display'>
+                                <span>The following errors were found:</span>
+                                <ul>
+                                    {errors.map(error => (
+                                        <li key={error}>{error}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                         <h3>{event.title}</h3>
-                        <p>{event.description}</p>
+                        <h5>{event.description}</h5>
                         <p><strong>Event Creator:</strong> {event.host.firstName} {event.host.lastName}</p>
                         <div>
                             {isSameDay ? (
@@ -197,6 +209,7 @@ const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
                                 </ul>
                             </div>
                         )}
+                        
                         
                         <div className='info-buttons'>
                             {event.host.userId !== 1 && fromInvite && (

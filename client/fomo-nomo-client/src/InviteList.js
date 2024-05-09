@@ -60,7 +60,7 @@ function InviteList() {
           <div>
             {pending.map(i => (
               // <div key={i.invitationId} onClick={() => handleEventSelect(i.event)} className='lined-li pending'>{i.event.title}: {moment(i.event.start).format('MMMM Do, YYYY')}
-              <div key={i.invitationId} onClick={() => handleSelect(i)} className='lined-li'>{i.event.title}: {moment(i.event.start).format('MMMM Do, YYYY')}
+              <div key={i.invitationId} onClick={() => handleSelect(i)} className='lined-li'><strong>{i.event.title}: {moment(i.event.start).format('MMMM Do, YYYY')}</strong>
                 <span className='invite-list-buttons'>
                   <button className='btn btn-sm btn-list btn-invite'>View</button>
 

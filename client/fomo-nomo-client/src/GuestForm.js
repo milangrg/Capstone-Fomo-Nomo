@@ -3,47 +3,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const GuestForm = ({ event, onClose }) => {
 
-    // console.log(event)
-
-    // const allGuests = [
-
-    //     {
-    //         id: 2,
-    //         firstName: 'Some',
-    //         lastName: 'Guy'
-    //     },
-    //     {
-    //         id: 3,
-    //         firstName: 'Bob',
-    //         lastName: 'Roberts'
-    //     },
-    //     {
-    //         id: 4,
-    //         firstName: 'Someone',
-    //         lastName: 'Else'
-    //     }
-
-    // ]
-
-    // const invitedGuests = [
-
-    //     {
-    //         id: 3,
-    //         firstName: 'Bob',
-    //         lastName: 'Roberts'
-    //     },
-    //     {
-    //         id: 4,
-    //         firstName: 'Someone',
-    //         lastName: 'Else'
-    //     }
-
-    // ]
-
-    // const theseGuests = allGuests.map(g => ({
-    //     ...g,
-    //     isInvited: invitedGuests.some(i => i.id === g.id)
-    // }));
 
     // GET ALL USERS 
 
@@ -67,7 +26,7 @@ const GuestForm = ({ event, onClose }) => {
 
     const deleteUrl = 'http://localhost:8080/api/event'
     const conflictUrl = 'http://localhost:8080/api/invitation/conflict/1'
-    const allUsersUrl = 'http://localhost:8080/api/user'
+    const allUsersUrl = 'http://localhost:8080/api/user/guests/1'
     const invitedGuestsUrl = 'http://localhost:8080/api/event/guests'
     const sendInvitesUrl = 'http://localhost:8080/api/invitation/invites/1'
 
@@ -111,12 +70,9 @@ const GuestForm = ({ event, onClose }) => {
             return guest;
         })
         setAllGuests(updatedGuests);
-        // console.log(id)
-        // console.log(updatedGuests)
     };
 
     const handleCheckAvailability = () => {
-        
 
         const inviteList = [];
 
@@ -124,13 +80,9 @@ const GuestForm = ({ event, onClose }) => {
             if (guest.isInvited) {
                 const invite = { ...defaultInvite };
                 invite.guestId = guest.userId;
-                // console.log(`${guest.userId} ${guest.firstName}`)
                 inviteList.push(invite)
             }
         })
-
-        // console.log('invite list:')
-        // console.log(inviteList)
 
         const init = {
             method: 'POST',
@@ -148,26 +100,25 @@ const GuestForm = ({ event, onClose }) => {
                 }
             })
             .then(data => {
-                if(data && data.length > 0) {
+                if (data && data.length > 0) {
                     setConflictFree(false);
                     setConflicts(data);
-                    // console.log('conflict')
-                    // console.log(data)
-                }else{
-                    setConflicts([]);
+                } else {
                     setConflictFree(true);
+                    setConflicts([]);
+
                 }
             })
             .catch(console.log)
 
     };
 
-    const handleSkip = () => {
-        generateSuccessMessage();
+    const handleSkip = (msg) => {
+        generateSuccessMessage("Your event was successfully created. :)");
     }
 
-    const generateSuccessMessage = () => {
-        window.alert("Your event was successfully created. :)")
+    const generateSuccessMessage = (msg) => {
+        window.alert(msg)
         onClose();
 
     }
@@ -195,24 +146,17 @@ const GuestForm = ({ event, onClose }) => {
 
         e.preventDefault();
         const finalGuestList = allGuests.filter(g => g.isInvited);
-        if (finalGuestList.length > 0) {
-            generateInviteList(finalGuestList);
-            // console.log(finalGuestList)
-            // sendGuestList();
-        } else {
-            generateSuccessMessage();
-        }
+        generateInviteList(finalGuestList);
+
     }
 
-    const generateInviteList = (finalGuests) => {
+    const generateInviteList = (finalGuestList) => {
 
         const inviteList = [];
-        // console.log(invitedGuests)
 
-        finalGuests.forEach(guest => {
+        finalGuestList.forEach(guest => {
             const invite = { ...defaultInvite };
             invite.guestId = guest.userId;
-            // console.log(`${guest.userId} ${guest.firstName}`)
             inviteList.push(invite)
         })
 
@@ -237,14 +181,14 @@ const GuestForm = ({ event, onClose }) => {
                     return Promise.reject(`Unexpected status code: ${response.status}`);
                 }
             })
-            // .then(data => {
-            //     if(data.get(0).invitationId > 0) {
-            //         generateSuccessMessage('Invites sent!')                   
-            //     } else {
-            //         setErrors(data);
-            //         // console.log(errors)
-            //     }
-            // })
+            .then(data => {
+                if(data[0].invitationId > 0) {
+                    generateSuccessMessage('Invitations sent!')                   
+                } else {
+                    setErrors(data);
+                    // console.log(errors)
+                }
+            })
             .catch(console.log)
 
     }
@@ -260,7 +204,7 @@ const GuestForm = ({ event, onClose }) => {
                             {conflicts.map(conflict => (
                                 <p key={conflict.userId}>-{conflict.firstName} {conflict.lastName}</p>
                             ))}
-                        
+
                         </div>
                     )}
                     {conflictFree && (
