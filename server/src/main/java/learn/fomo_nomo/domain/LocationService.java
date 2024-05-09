@@ -87,6 +87,10 @@ public class LocationService {
             result.addMessage("state is required", ResultType.INVALID);
         }
 
+        if (location.getState() != null && location.getState().trim().length() != 2) {
+            result.addMessage("state has to be 2 letters", ResultType.INVALID);
+        }
+
         // null postal is fine in schema
         return result;
     }

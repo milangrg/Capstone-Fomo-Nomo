@@ -12,11 +12,11 @@ const EventForm = ({ event: originalEvent, onClose }) => {
     // const [endTime, setEndTime] = useState();
     const [endDate, setEndDate] = useState();
     const [guestFormMode, setGuestFormMode] = useState(false);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const postUrl = 'http://localhost:8080/api/event/1';
     const putUrl = 'http://localhost:8080/api/event'
-    const { id } = useParams();
+    // const { id } = useParams();
     // const conflictUrl = 'http://localhost:8080/api/invitation/conflict/1'
 
 
@@ -169,7 +169,7 @@ const EventForm = ({ event: originalEvent, onClose }) => {
             })
             .then(data => {
                 if (data.eventId) {
-                    console.log(data.eventId)
+                    // console.log(data.eventId)
                     setEvent(data)
                     setGuestFormMode(true)
                     // return true;                    

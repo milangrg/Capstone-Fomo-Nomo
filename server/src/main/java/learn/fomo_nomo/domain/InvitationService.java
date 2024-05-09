@@ -126,13 +126,60 @@ public class InvitationService {
 
             Event event = invitation.getEvent();
             for (Event currEvent : eventList) {
-                if (currEvent.getEventId() != event.getEventId() && event.getStart().isAfter(currEvent.getStart())
-                        && event.getStart().isBefore(currEvent.getEnd())) {
+//                if (currEvent.getEventId() != event.getEventId() && event.getStart().isAfter(currEvent.getStart())
+//                        && event.getStart().isBefore(currEvent.getEnd())) {
+//                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+//                    return result;
+//                }
+//                if (currEvent.getEventId() != event.getEventId() && event.getEnd().isAfter(currEvent.getStart())
+//                        && event.getEnd().isBefore(currEvent.getEnd())) {
+//                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+//                    return result;
+//                }
+                // [event]
+                // (curr)))
+                if ( event.getStart().isEqual(currEvent.getStart()) &&
+                        ( (event.getEnd().isEqual(currEvent.getEnd()) ||
+                                event.getEnd().isBefore(currEvent.getEnd()) || event.getEnd().isAfter(currEvent.getEnd()) ) )
+                ) {
                     result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
                     return result;
                 }
-                if (currEvent.getEventId() != event.getEventId() && event.getEnd().isAfter(currEvent.getStart())
-                        && event.getEnd().isBefore(currEvent.getEnd())) {
+
+                //  [event]
+                // (((curr)
+                if ( event.getEnd().isEqual(currEvent.getEnd()) &&
+                        ( (event.getStart().isEqual(currEvent.getStart()) ||
+                                event.getStart().isBefore(currEvent.getStart()) || event.getStart().isAfter(currEvent.getStart()) ) )
+                ) {
+                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    return result;
+                }
+
+                // [ event  ]
+                //   (curr)
+                if (event.getStart().isBefore(currEvent.getStart()) && event.getEnd().isAfter(currEvent.getEnd())) {
+                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    return result;
+                }
+
+                //    [event]
+                //  (   curr   )
+                if (event.getStart().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())) {
+                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    return result;
+                }
+
+                // [event]
+                //    (curr)
+                if (event.getEnd().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())) {
+                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    return result;
+                }
+
+                //    [event]
+                //  (curr)
+                if (event.getStart().isAfter(currEvent.getStart()) && event.getStart().isBefore(currEvent.getEnd())) {
                     result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
                     return result;
                 }
@@ -205,13 +252,48 @@ public class InvitationService {
         // check all events guest is hosting
         List<Event> hostedEvents = findAllEventByHosId(guestId);
         for (Event currEvent : hostedEvents) {
+            // [event]
+            // (curr)))
+            if ( event.getStart().isEqual(currEvent.getStart()) &&
+                    ( (event.getEnd().isEqual(currEvent.getEnd()) ||
+                    event.getEnd().isBefore(currEvent.getEnd()) || event.getEnd().isAfter(currEvent.getEnd()) ) )
+                ) {
+                return false;
+            }
+
+            //  [event]
+            // (((curr)
+            if ( event.getEnd().isEqual(currEvent.getEnd()) &&
+                    ( (event.getStart().isEqual(currEvent.getStart()) ||
+                            event.getStart().isBefore(currEvent.getStart()) || event.getStart().isAfter(currEvent.getStart()) ) )
+            ) {
+                return false;
+            }
+
+            // [ event  ]
+            //   (curr)
+            if (event.getStart().isBefore(currEvent.getStart()) && event.getEnd().isAfter(currEvent.getEnd())) {
+                return false;
+            }
+
+            //    [event]
+            //  (   curr   )
+            if (event.getStart().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())) {
+                return false;
+            }
+
+            // [event]
+            //    (curr)
+            if (event.getEnd().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())) {
+                return false;
+            }
+
+            //    [event]
+            //  (curr)
             if (event.getStart().isAfter(currEvent.getStart()) && event.getStart().isBefore(currEvent.getEnd())) {
                 return false;
             }
 
-            if (event.getEnd().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())) {
-                return false;
-            }
         }
 
         // check all events where guest is invited and status is accepted
@@ -221,11 +303,45 @@ public class InvitationService {
                 .collect(Collectors.toList());
 
         for (Event currEvent : invitedEvents) {
-            if (event.getStart().isAfter(currEvent.getStart()) && event.getStart().isBefore(currEvent.getEnd())) {
+            // [event]
+            // (curr)))
+            if ( event.getStart().isEqual(currEvent.getStart()) &&
+                    ( (event.getEnd().isEqual(currEvent.getEnd()) ||
+                            event.getEnd().isBefore(currEvent.getEnd()) || event.getEnd().isAfter(currEvent.getEnd()) ) )
+            ) {
                 return false;
             }
 
+            //  [event]
+            // (((curr)
+            if ( event.getEnd().isEqual(currEvent.getEnd()) &&
+                    ( (event.getStart().isEqual(currEvent.getStart()) ||
+                            event.getStart().isBefore(currEvent.getStart()) || event.getStart().isAfter(currEvent.getStart()) ) )
+            ) {
+                return false;
+            }
+
+            // [ event  ]
+            //   (curr)
+            if (event.getStart().isBefore(currEvent.getStart()) && event.getEnd().isAfter(currEvent.getEnd())) {
+                return false;
+            }
+
+            //    [event]
+            //  (   curr   )
+            if (event.getStart().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())) {
+                return false;
+            }
+
+            // [event]
+            //    (curr)
             if (event.getEnd().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())) {
+                return false;
+            }
+
+            //    [event]
+            //  (curr)
+            if (event.getStart().isAfter(currEvent.getStart()) && event.getStart().isBefore(currEvent.getEnd())) {
                 return false;
             }
         }

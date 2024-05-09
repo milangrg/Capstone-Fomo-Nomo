@@ -111,8 +111,8 @@ const GuestForm = ({ event, onClose }) => {
             return guest;
         })
         setAllGuests(updatedGuests);
-        console.log(id)
-        console.log(updatedGuests)
+        // console.log(id)
+        // console.log(updatedGuests)
     };
 
     const handleCheckAvailability = () => {
@@ -128,6 +128,9 @@ const GuestForm = ({ event, onClose }) => {
                 inviteList.push(invite)
             }
         })
+
+        // console.log('invite list:')
+        // console.log(inviteList)
 
         const init = {
             method: 'POST',
@@ -148,7 +151,8 @@ const GuestForm = ({ event, onClose }) => {
                 if(data && data.length > 0) {
                     setConflictFree(false);
                     setConflicts(data);
-                    console.log(data)
+                    // console.log('conflict')
+                    // console.log(data)
                 }else{
                     setConflicts([]);
                     setConflictFree(true);
@@ -208,7 +212,7 @@ const GuestForm = ({ event, onClose }) => {
         finalGuests.forEach(guest => {
             const invite = { ...defaultInvite };
             invite.guestId = guest.userId;
-            console.log(`${guest.userId} ${guest.firstName}`)
+            // console.log(`${guest.userId} ${guest.firstName}`)
             inviteList.push(invite)
         })
 
