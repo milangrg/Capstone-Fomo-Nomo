@@ -43,6 +43,25 @@ public class InvitationController {
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
+    // return list of invited guests for the event for edit event view
+    // from eventId
+    @GetMapping("/guests/{eventId}")
+    public ResponseEntity<Object> getInvitedGuests(@PathVariable int eventId) {
+
+        List<User> guestList = service.findAllGuestsByEvent(eventId);
+        return new ResponseEntity<>(guestList, HttpStatus.OK);
+    }
+
+    // request event object in body
+    // return list of invitation
+    @GetMapping("/invites/event/{eventId}")
+    public ResponseEntity<Object> getAllInvites(@PathVariable int eventId) {
+
+        List<Invitation> invitationList = service.findAllInvitationsByEvent(eventId);
+        return new ResponseEntity<>(invitationList, HttpStatus.OK);
+    }
+
+
     // Single Add
     @PostMapping("/invite/{userId}")
     public ResponseEntity<Object> add(@PathVariable int userId, @RequestBody Invitation invitation) {

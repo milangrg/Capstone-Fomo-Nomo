@@ -48,6 +48,30 @@ public class InvitationService {
                 .collect(Collectors.toList());
     }
 
+    // returns all guests for the event
+    public List<User> findAllGuestsByEvent(int eventId) {
+
+        List<Invitation> invitationList = invitationRepository.findAll()
+                .stream()
+                .filter(i -> i.getEvent().getEventId() == eventId)
+                .collect(Collectors.toList());
+
+        List<User> guestList = new ArrayList<>();
+        for (Invitation invitation : invitationList) {
+            guestList.add(userRepository.findById(invitation.getGuestId()));
+        }
+
+        return guestList;
+    }
+
+    public List<Invitation> findAllInvitationsByEvent(int eventId) {
+
+        return invitationRepository.findAll()
+                .stream()
+                .filter(i -> i.getEvent().getEventId() == eventId)
+                .collect(Collectors.toList());
+    }
+
     public Invitation findById(int invitationId) {
         return invitationRepository.findById(invitationId);
     }
@@ -74,8 +98,6 @@ public class InvitationService {
             return result;
         }
 
-        // Check conflicts?
-
         invitation = invitationRepository.add(invitation);
         result.setPayload(invitation);
         return result;
@@ -92,8 +114,30 @@ public class InvitationService {
             return result;
         }
 
-        // Check duplicate?
         // Check conflicts?
+        if (invitation.getStatus() == Status.ACCEPTED) {
+            // check all the invitations where user invited and accepted status
+            List<Event> eventList = findAllAcceptedInvitationByGuestId(invitation.getGuestId())
+                    .stream()
+                    .map(Invitation::getEvent)
+                    .collect(Collectors.toList());
+            // check all events user is hosting
+            eventList.addAll(findAllEventByHosId(invitation.getGuestId()));
+
+            Event event = invitation.getEvent();
+            for (Event currEvent : eventList) {
+                if (currEvent.getEventId() != event.getEventId() && event.getStart().isAfter(currEvent.getStart())
+                        && event.getStart().isBefore(currEvent.getEnd())) {
+                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    return result;
+                }
+                if (event.getEnd().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())
+                        && event.getStart().isBefore(currEvent.getEnd())) {
+                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    return result;
+                }
+            }
+        }
 
         if (!invitationRepository.update(invitation)) {
             String msg = String.format("invitationId: %s, not found",
