@@ -62,6 +62,8 @@ const GuestForm = ({ event, onClose }) => {
     const [invitedGuests, setInvitedGuests] = useState([]);
     const [inviteList, setInviteList] = useState([]);
     const [errors, setErrors] = useState([]);
+    const [conflicts, setConflicts] = useState([]);
+    const [conflictFree, setConflictFree] = useState(false);
 
     const deleteUrl = 'http://localhost:8080/api/event'
     const conflictUrl = 'http://localhost:8080/api/invitation/conflict/1'
@@ -70,13 +72,13 @@ const GuestForm = ({ event, onClose }) => {
     const sendInvitesUrl = 'http://localhost:8080/api/invitation/invites/1'
 
     const defaultInvite = {
-        invitationId: 0, 
+        invitationId: 0,
         event: event,
-        guestId: 0, 
+        guestId: 0,
         status: 'PENDING'
     }
 
-    // get all guests 
+    // DON'T WANT HOST 
     useEffect(() => {
         fetch(allUsersUrl)
             .then(response => {
@@ -89,7 +91,6 @@ const GuestForm = ({ event, onClose }) => {
             // .then(data => setAllGuests(data))
             .then(data => setInviteBools(data))
             .catch(console.log)
-
 
     }, []);
 
@@ -104,8 +105,8 @@ const GuestForm = ({ event, onClose }) => {
 
     const handleInviteToggle = (id) => {
         const updatedGuests = allGuests.map(guest => {
-            if(guest.userId === id){
-                return {...guest, isInvited: !guest.isInvited}
+            if (guest.userId === id) {
+                return { ...guest, isInvited: !guest.isInvited }
             }
             return guest;
         })
@@ -115,9 +116,47 @@ const GuestForm = ({ event, onClose }) => {
     };
 
     const handleCheckAvailability = () => {
+        
 
-    }; 
+        const inviteList = [];
 
+        allGuests.forEach(guest => {
+            if (guest.isInvited) {
+                const invite = { ...defaultInvite };
+                invite.guestId = guest.userId;
+                // console.log(`${guest.userId} ${guest.firstName}`)
+                inviteList.push(invite)
+            }
+        })
+
+        const init = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(inviteList)
+        };
+        fetch(conflictUrl, init)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return Promise.reject(`Unexpected status code: ${response.status}`);
+                }
+            })
+            .then(data => {
+                if(data && data.length > 0) {
+                    setConflictFree(false);
+                    setConflicts(data);
+                    console.log(data)
+                }else{
+                    setConflicts([]);
+                    setConflictFree(true);
+                }
+            })
+            .catch(console.log)
+
+    };
 
     const handleSkip = () => {
         generateSuccessMessage();
@@ -167,7 +206,7 @@ const GuestForm = ({ event, onClose }) => {
         // console.log(invitedGuests)
 
         finalGuests.forEach(guest => {
-            const invite = {...defaultInvite};
+            const invite = { ...defaultInvite };
             invite.guestId = guest.userId;
             console.log(`${guest.userId} ${guest.firstName}`)
             inviteList.push(invite)
@@ -203,7 +242,7 @@ const GuestForm = ({ event, onClose }) => {
             //     }
             // })
             .catch(console.log)
-         
+
     }
 
     return (
@@ -211,6 +250,20 @@ const GuestForm = ({ event, onClose }) => {
             <main className='form-container'>
                 <div className='form-data'>
                     <h3 className='form-header'>Invite Guests (optional)</h3>
+                    {conflicts.length > 0 && (
+                        <div className='conflict-list'>
+                            <h5>Guests with scheduling conflicts: </h5>
+                            {conflicts.map(conflict => (
+                                <p key={conflict.userId}>-{conflict.firstName} {conflict.lastName}</p>
+                            ))}
+                        
+                        </div>
+                    )}
+                    {conflictFree && (
+                        <div className='non-conflict'>
+                            <h5>No conflicts found. Nice! </h5>
+                        </div>
+                    )}
                     <form onSubmit={handleSubmit}>
                         <fieldset>
                             <div className='form-guests'>
