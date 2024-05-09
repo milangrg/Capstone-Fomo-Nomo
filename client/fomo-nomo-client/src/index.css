@@ -36,8 +36,8 @@ body {
   justify-content: space-evenly;
 }
 
-.location-name {
-  font-weight: bold;
+.info-section {
+  padding-bottom: 10px;
 }
 
 .address-details span {

@@ -71,14 +71,14 @@ const holidays = [
   list: 'blah blah'
 },
 
-{
-  id: 2,
-  title: 'Birthday',
-  start: new Date(2024, 4, 12, 0, 0),
-  end: new Date(2024, 4, 12, 23, 59),
-  description: '31 and having fun', 
-  list: 'blah blah'
-},
+// {
+//   id: 2,
+//   title: 'Birthday',
+//   start: new Date(2024, 4, 12, 0, 0),
+//   end: new Date(2024, 4, 12, 23, 59),
+//   description: '31 and having fun', 
+//   list: 'blah blah'
+// },
 
 ]
 
@@ -115,7 +115,7 @@ const EventCalendar = () => {
     end: new Date(e.end)
   }))
 
-  console.log(formattedEvents)
+  // console.log(formattedEvents)
   
 
   const handleEventSelect = event => {
