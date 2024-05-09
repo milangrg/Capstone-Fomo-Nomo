@@ -174,7 +174,6 @@ public class EventService {
             }
         }
 
-
         return result;
     }
 }

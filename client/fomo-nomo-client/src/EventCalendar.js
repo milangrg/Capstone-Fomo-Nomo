@@ -2,65 +2,65 @@ import React from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import style from 'react-big-calendar/lib/css/react-big-calendar.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EventInfo from './EventInfo';
 import EventForm from './EventForm';
 
 const localizer = momentLocalizer(moment);
 
-const events = [
-  {
+// const events = [
+//   {
   
-      "eventId": 5,
-      "host": {
-        "userId": 1,
-        "firstName": "Alex",
-        "lastName": "Carter",
-        "email": "acarter1234@emailspot.com",
-        "phone": "555-555-1234",
-        "dob": "1995-08-02"
-      },
-      "title": "Golf Outing",
-      "description": "It is time for our annual golf tournament!",
-      "location": {
-        "locationId": 7,
-        "address": "1550 Golf Path",
-        "state": "NY",
-        "city": "Saratoga Springs",
-        "postal": "12866",
-        "locationName": "The Golf Emporium"
-      },
-      "eventType": "SOCIAL",
-      "start": "2024-05-11T01:00:00",
-      "end": "2024-05-11T05:00:00"
-    },
+//       "eventId": 5,
+//       "host": {
+//         "userId": 1,
+//         "firstName": "Alex",
+//         "lastName": "Carter",
+//         "email": "acarter1234@emailspot.com",
+//         "phone": "555-555-1234",
+//         "dob": "1995-08-02"
+//       },
+//       "title": "Golf Outing",
+//       "description": "It is time for our annual golf tournament!",
+//       "location": {
+//         "locationId": 7,
+//         "address": "1550 Golf Path",
+//         "state": "NY",
+//         "city": "Saratoga Springs",
+//         "postal": "12866",
+//         "locationName": "The Golf Emporium"
+//       },
+//       "eventType": "SOCIAL",
+//       "start": "2024-05-11T01:00:00",
+//       "end": "2024-05-11T05:00:00"
+//     },
 
-    {"eventId": 3,
-    "host": {
-      "userId": 9,
-      "firstName": "Viola",
-      "lastName": "Reynolds",
-      "email": "vr11_@yahoo2.com",
-      "phone": "555-555-9999",
-      "dob": "1989-05-19"
-    },
-    "title": "Work Happy Hour",
-    "description": "Meet for happy hour drinks and food",
-    "location": {
-      "locationId": 1,
-      "address": "3300 Riverfront Walk",
-      "state": "NY",
-      "city": "Buffalo",
-      "postal": "14202",
-      "locationName": "Riverside Restaurant"
-    },
-    "eventType": "WORK",
-    "start": "2024-05-21T10:00:00",
-    "end": "2024-05-21T13:00:00"
-  },
+//     {"eventId": 3,
+//     "host": {
+//       "userId": 9,
+//       "firstName": "Viola",
+//       "lastName": "Reynolds",
+//       "email": "vr11_@yahoo2.com",
+//       "phone": "555-555-9999",
+//       "dob": "1989-05-19"
+//     },
+//     "title": "Work Happy Hour",
+//     "description": "Meet for happy hour drinks and food",
+//     "location": {
+//       "locationId": 1,
+//       "address": "3300 Riverfront Walk",
+//       "state": "NY",
+//       "city": "Buffalo",
+//       "postal": "14202",
+//       "locationName": "Riverside Restaurant"
+//     },
+//     "eventType": "WORK",
+//     "start": "2024-05-21T10:00:00",
+//     "end": "2024-05-21T13:00:00"
+//   },
 
 
-]
+// ]
 const holidays = [
 {
   id: 1,
@@ -82,20 +82,41 @@ const holidays = [
 
 ]
 
-const formattedEvents = events.map(e => ({
-  ...e, 
-  start: new Date(e.start),
-  end: new Date(e.end)
-}))
 
-// console.log(formattedEvents)
+
 // need functions to pull events i'm hosting or i've accepted only for this page and eventlist page
 
 const EventCalendar = () => {
 
-  // const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
+
+
+  const url = 'http://localhost:8080/api/invitation/1';
+
+  useEffect(() => {
+    fetch(url)
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                return Promise.reject(`Unexpected status code: ${response.status}`);
+            }
+        })
+        .then(data => setEvents(data))
+        .catch(console.log)
+}, []);
+
+
+  const formattedEvents = events.map(e => ({
+    ...e, 
+    start: new Date(e.start),
+    end: new Date(e.end)
+  }))
+
+  console.log(formattedEvents)
+  
 
   const handleEventSelect = event => {
     setSelectedEvent(event);
@@ -105,15 +126,6 @@ const EventCalendar = () => {
     setSelectedEvent(null);
     setSelectedSlot(null)
   };
-
-  // const handleSlotSelect = slotInfo => {
-  //   console.log(`selected ${slotInfo.start}`)
-  //   setSelectedEvent(null);  
-  //   setSelectedSlot({
-  //     startDate: slotInfo.start,
-  //     endDate: slotInfo.end
-  //   });
-  // };
 
 
   const handleSlotSelect = slotInfo => {

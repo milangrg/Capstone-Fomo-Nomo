@@ -71,13 +71,18 @@ body {
 }
 
 .form-guests {
-  display: flex;
-  justify-content: space-between;
+  display: flex;      /* Enables Flexbox */
+  flex-wrap: wrap;    /* Allows items to wrap onto the next line */
+  justify-content: flex-start; /* Aligns items to the start of the container */
+  align-items: center; /* Aligns items vertically */
+  gap: 20px;    
+  
 }
 
 .form-btn-container{
   display: flex;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 
 }
 
