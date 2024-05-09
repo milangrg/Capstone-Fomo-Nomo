@@ -46,8 +46,13 @@ class LocationServiceTest {
         Result<Location> result = service.add(null);
         assertEquals(ResultType.INVALID, result.getType());
 
-        // Should not add if state is null
+        // Should not add if state is not 2 characters
         Location location = makeLocation();
+        location.setState("washington");
+        result = service.add(location);
+        assertEquals(ResultType.INVALID, result.getType());
+
+        // Should not add if state is null
         location.setState(null);
         result = service.add(location);
         assertEquals(ResultType.INVALID, result.getType());
