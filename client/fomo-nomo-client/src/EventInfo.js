@@ -1,33 +1,78 @@
 import moment from 'moment';
 import EventForm from './EventForm';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
     
     const [editMode, setEditMode] = useState(false);
     const [eventInvite, setEventInvite] = useState(invite);
     const [errors, setErrors] = useState([]);
+    const [guestList, setGuestList] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
+    const [guestStatuses, setGuestStatuses] = useState([]);
 
 
-    const url = 'http://localhost:8080/api/invitation/invites/1'
+    const guestListUrl = 'http://localhost:8080/api/invitation/invites/event'
     const putUrl = 'http://localhost:8080/api/invitation'
     const deleteUrl = 'http://localhost:8080/api/event'
+    const allUsersUrl = 'http://localhost:8080/api/user'
 
     // LIST OF INVITEES AND STATUSES (send eventId)
 
-    // useEffect(() => {
-    //     fetch(url)
-    //         .then(response => {
-    //             if (response.status === 200) {
-    //                 return response.json();
-    //             } else {
-    //                 return Promise.reject(`Unexpected status code: ${response.status}`);
-    //             }
-    //         })
-    //         .then(data => setInvites(data))
-    //         .catch(console.log)
+    useEffect(() => {
+        fetch(`${guestListUrl}/${event.eventId}`)
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json();
+                } else {
+                    return Promise.reject(`Unexpected status code: ${response.status}`);
+                }
+            })
+            .then(data => setGuestList(data))
+            // .then(data => console.log(data))
+            .catch(console.log)
   
-    // }, []);
+    }, [guestListUrl, event.eventId]);
+
+    useEffect(() => {
+        fetch(allUsersUrl)
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json();
+                } else {
+                    return Promise.reject(`Unexpected status code: ${response.status}`);
+                }
+            })
+            // .then(data => setAllGuests(data))
+            .then(data => setAllUsers(data))
+            .catch(console.log)
+
+    }, [allUsersUrl]);
+
+
+    useEffect(() => {
+        const statuses = [];
+        if (allUsers && guestList) {
+            const statusIdMap = new Map();
+            guestList.forEach(invite => {
+                statusIdMap.set(invite.guestId, invite.status);
+            })
+
+            // console.log(statusIdMap)
+            
+            allUsers.forEach(user => {
+                if(statusIdMap.get(user.userId)){
+                    // console.log('found it')
+                    statuses.push({
+                        name: `${user.firstName} ${user.lastName}`, 
+                        status: statusIdMap.get(user.userId)})
+                }
+            })
+            setGuestStatuses(statuses)
+        }
+
+    }, [allUsers, guestList]);
+
 
     // GET FOR CONFLICTING EVENTS 
 
@@ -97,7 +142,6 @@ const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
                 }
             })
             .catch(console.log);
-
     }
 
 
@@ -116,25 +160,26 @@ const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
                     <div className='event-data'>
                         <h3>{event.title}</h3>
                         <p>{event.description}</p>
-                        <p>Event Creator: {event.host.firstName} {event.host.lastName}</p>
+                        <p><strong>Event Creator:</strong> {event.host.firstName} {event.host.lastName}</p>
                         <div>
                             {isSameDay ? (
                                 <p>
-                                    Date: {startDate.format('MMMM Do, YYYY')}<br />
-                                    Time: {startDate.format('h:mm a')} - {endDate.format('h:mm a')}
+                                    <strong>Date:</strong> {startDate.format('MMMM Do, YYYY')}<br />
+                                    <strong>Time:</strong> {startDate.format('h:mm a')} - {endDate.format('h:mm a')}
                                 </p>
                             ) : (
                                 <p>
-                                    Start: {startDate.format('MMMM Do, YYYY, h:mm a')}<br />
-                                    End: {endDate.format('MMMM Do, YYYY, h:mm a')}
+                                    <strong>Start:</strong> {startDate.format('MMMM Do, YYYY, h:mm a')}<br />
+                                    <strong>End:</strong> {endDate.format('MMMM Do, YYYY, h:mm a')}
                                 </p>
                             )}
                         </div>
                         <p>
-                            Event Type: {event.eventType}
+                            <strong>Event Type:</strong> {event.eventType}
                         </p>
-                        <div className='info-location'>
+                        <div className='info-section'>
                             <div className='info-address'>
+                            <div><strong>Location:</strong></div>
                                 {event.location.locationName && <div className='location-name'>{event.location.locationName}</div>}
                                 <span>{event.location.address}, </span>
                                 <span>{event.location.city}, </span>
@@ -142,15 +187,15 @@ const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
                                 <span>{event.location.postal}</span>
                             </div>
                         </div>
-                        {event.attendees && event.attendees.length > 0 && (
-                            <>
-                                <h5>Attendees:</h5>
+                        {guestStatuses && guestStatuses.length > 0 && (
+                            <div className='info-section'>
+                                <div><strong>Guest list:</strong></div>
                                 <ul>
-                                    {event.attendees.map((attendee, index) => (
-                                        <li key={index}>{attendee}</li>
+                                    {guestStatuses.map((guest, i) => (
+                                        <li key={i}>{guest.name}: {guest.status}</li>
                                     ))}
                                 </ul>
-                            </>
+                            </div>
                         )}
                         
                         <div className='info-buttons'>

@@ -95,9 +95,9 @@ function EventList() {
     }, [events]);
 
 
-    console.log(hostingEvents)
+    // console.log(hostingEvents)
     const handleEventSelect = (e) => () => {
-        console.log(e.title)
+        // console.log(e.title)
         setSelectedEvent(e);
 
     };
