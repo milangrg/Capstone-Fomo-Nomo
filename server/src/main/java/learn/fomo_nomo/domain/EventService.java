@@ -2,10 +2,8 @@ package learn.fomo_nomo.domain;
 
 import learn.fomo_nomo.data.EventRepository;
 import learn.fomo_nomo.data.InvitationRepository;
-import learn.fomo_nomo.models.Event;
-import learn.fomo_nomo.models.Invitation;
-import learn.fomo_nomo.models.Status;
-import learn.fomo_nomo.models.User;
+import learn.fomo_nomo.data.LocationRepository;
+import learn.fomo_nomo.models.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,10 +15,12 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final InvitationRepository invitationRepository;
+    private final LocationRepository locationRepository;
 
-    public EventService(EventRepository eventRepository, InvitationRepository invitationRepository) {
+    public EventService(EventRepository eventRepository, InvitationRepository invitationRepository, LocationRepository locationRepository) {
         this.eventRepository = eventRepository;
         this.invitationRepository = invitationRepository;
+        this.locationRepository = locationRepository;
     }
 
 
@@ -31,6 +31,8 @@ public class EventService {
     public Event findByEventId(int eventId){
         return eventRepository.findById(eventId);
     }
+
+    public List<Location> findAllLocation(){return locationRepository.findAll();}
 
     public List<Invitation> findAllInvitations(){
         return invitationRepository.findAll();

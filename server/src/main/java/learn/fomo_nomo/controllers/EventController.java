@@ -1,8 +1,10 @@
 package learn.fomo_nomo.controllers;
 
 import learn.fomo_nomo.domain.EventService;
+import learn.fomo_nomo.domain.LocationService;
 import learn.fomo_nomo.domain.Result;
 import learn.fomo_nomo.models.Event;
+import learn.fomo_nomo.models.Location;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +15,17 @@ import java.util.List;
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RequestMapping("/api/event")
 public class EventController {
-    private final EventService service;
+    private final EventService eventService;
+    private final LocationService locationService;
 
-    public EventController(EventService service) {
-        this.service = service;
+    public EventController(EventService eventService, LocationService locationService) {
+        this.eventService = eventService;
+        this.locationService = locationService;
     }
 
     @GetMapping
     public List<Event> findAll(){
-        return service.findAllEvents();
+        return eventService.findAllEvents();
     }
 
 //    @GetMapping("/{eventId}")
@@ -31,7 +35,7 @@ public class EventController {
 
     @GetMapping("user/{userId}")
     public List<Event> findHostEventsByHostId(@PathVariable int userId){
-        return service.findHostEventsByHostId(userId);
+        return eventService.findHostEventsByHostId(userId);
     }
 
     @PostMapping("/{userId}")
@@ -40,11 +44,27 @@ public class EventController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
-        Result<Event> result = service.add(event);
+        //Check if location already exists, otherwise make a new one
+        if(event.getLocation().getLocationId() == 0){
+            Location checkedLocation = locationService.checkIfExist(event.getLocation());
+            if (checkedLocation != null){
+                event.setLocation(checkedLocation);
+            }
+            else {
+                Result<Location> newLocation = locationService.add(event.getLocation());
+                if(!newLocation.isSuccess()){
+                    return ErrorResponse.build(newLocation);
+                }
+                event.setLocation(newLocation.getPayload());
+            }
+        }
+
+
+        Result<Event> result = eventService.add(event);
         if(result.isSuccess()){
             return new ResponseEntity<>(result.getPayload(),HttpStatus.CREATED);
         }
-        return  ErrorResponse.build(result);
+        return ErrorResponse.build(result);
     }
 
     @PutMapping("/{eventId}")
@@ -53,7 +73,7 @@ public class EventController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
-        Result<Event> result = service.update(event);
+        Result<Event> result = eventService.update(event);
         if(result.isSuccess()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -63,7 +83,7 @@ public class EventController {
 
     @DeleteMapping("/{eventId}")
     public ResponseEntity<Void> deleteById(@PathVariable int eventId){
-        if(service.deleteById(eventId)){
+        if(eventService.deleteById(eventId)){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
