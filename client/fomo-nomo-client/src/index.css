@@ -96,6 +96,16 @@ form{
   padding-bottom: 5%;
 }
 
+.non-conflict{
+  color:green;
+  font-weight: 800;
+}
+
+.conflict-list{
+  color:rgb(94, 80, 224);
+  font-weight: 700;
+}
+
 
 
 
