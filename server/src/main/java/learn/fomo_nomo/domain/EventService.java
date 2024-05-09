@@ -114,7 +114,7 @@ public class EventService {
         }
 
         if (event.getStart().isAfter(event.getEnd()) || event.getStart().equals(event.getEnd())){
-            result.addMessage("Start must be before event",ResultType.INVALID);
+            result.addMessage("Start must be before End time",ResultType.INVALID);
         }
 
         if (event.getStart().isBefore(LocalDateTime.now())){
@@ -131,12 +131,13 @@ public class EventService {
                 continue;
             }
 
+
             if (event.getStart().isAfter(currEvent.getStart()) && event.getStart().isBefore(currEvent.getEnd())){
                 result.addMessage("Start has an overlap with an existing hosted event",ResultType.INVALID);
             }
 
             if(event.getEnd().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())){
-                result.addMessage("End has an overlap with an existing hosted event",ResultType.INVALID);
+                result.addMessage("End has an overlap with an existing hosted event" ,ResultType.INVALID);
             }
 
             if (event.getStart().equals(currEvent.getStart()) || event.getStart().equals(currEvent.getEnd())){
@@ -145,6 +146,10 @@ public class EventService {
 
             if(event.getEnd().equals(currEvent.getStart()) || event.getEnd().equals(currEvent.getEnd())){
                 result.addMessage("End has an overlap with an existing hosted event",ResultType.INVALID);
+            }
+
+            if(event.getStart().isBefore(currEvent.getStart()) && event.getEnd().isAfter(currEvent.getEnd())){
+                result.addMessage("Event range overlaps over another event",ResultType.INVALID);
             }
         }
 
@@ -171,6 +176,10 @@ public class EventService {
 
             if(event.getEnd().equals(currInvitation.getEvent().getStart()) || event.getEnd().equals(currInvitation.getEvent().getEnd())){
                 result.addMessage("End has an overlap with an existing invited event",ResultType.INVALID);
+            }
+
+            if(event.getStart().isBefore(currInvitation.getEvent().getStart()) && event.getEnd().isAfter(currInvitation.getEvent().getEnd())){
+                result.addMessage("Event range overlaps over another invited event",ResultType.INVALID);
             }
         }
 

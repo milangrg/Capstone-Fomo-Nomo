@@ -27,12 +27,12 @@ Content-Type: application/json
     "title": "Test",
     "description": "This is a test for add",
     "location": {
-      "locationId": 12,
-      "address": "7700 Avenue Street",
-      "state": "NJ",
-      "city": "Newark",
-      "postal": "07101",
-      "locationName": ""
+      "locationId": 0,
+      "address": "hahat",
+      "state": "NY",
+      "city": "Funny",
+      "postal": "12312",
+      "locationName": "??"
     },
     "eventType": "APPOINTMENT",
     "start": "2024-05-30T07:30:00",
@@ -54,8 +54,8 @@ Content-Type: application/json
         "phone": "555-555-2216",
         "dob": "1954-02-19"
     },
-    "title": "Testing Update",
-    "description": "This is a test for update",
+    "title": "HIIIIIII",
+    "description": "Test",
     "location": {
         "locationId": 12,
         "address": "7700 Avenue Street",
@@ -65,14 +65,14 @@ Content-Type: application/json
         "locationName": ""
     },
     "eventType": "SOCIAL",
-    "start": "2024-05-30T08:30:00",
-    "end": "2024-05-30T09:00:00"
+    "start": "2024-05-30T07:30:00",
+    "end": "2024-05-30T11:00:00"
 }
 
 
 ###
 
-DELETE {{url}}/7 HTTP/1.1
+DELETE {{url}}/11 HTTP/1.1
 
 
 

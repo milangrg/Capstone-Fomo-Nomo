@@ -16,6 +16,8 @@ public class UserService {
 
     public User findById(int userId){return repository.findById(userId);}
 
+    public List<User> findAllExceptUser(int userId){return repository.findAllExceptHost(userId);}
+
     public Result<User> add(User user){
         Result<User> result = validate(user);
         if(!result.isSuccess()){
