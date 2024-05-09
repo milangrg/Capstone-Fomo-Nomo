@@ -5,27 +5,31 @@ import GuestForm from './GuestForm';
 
 const EventForm = ({ event: originalEvent, onClose }) => {
 
-
-
     const [event, setEvent] = useState(originalEvent);
-
-
     const [errors, setErrors] = useState([]);
-    const [startTime, setStartTime] = useState();
+    // const [startTime, setStartTime] = useState();
     const [startDate, setStartDate] = useState();
-    const [endTime, setEndTime] = useState();
+    // const [endTime, setEndTime] = useState();
     const [endDate, setEndDate] = useState();
     const [guestFormMode, setGuestFormMode] = useState(false);
     const navigate = useNavigate();
+
+    const postUrl = 'http://localhost:8080/api/event/1';
+    const putUrl = 'http://localhost:8080/api/event'
+    const { id } = useParams();
+    // const conflictUrl = 'http://localhost:8080/api/invitation/conflict/1'
+
 
     useEffect(() => {
         if (event) {
             const formattedStartDate = moment(event.start).format('YYYY-MM-DDTHH:mm');
             const formattedEndDate = moment(event.end).format('YYYY-MM-DDTHH:mm');
             setStartDate(formattedStartDate);
-            setStartTime(formattedStartDate);
+            // setStartTime(formattedStartDate);
             setEndDate(formattedEndDate);
-            setEndTime(formattedEndDate);
+            // setEndTime(formattedEndDate);
+            // console.log(`start: ${formattedStartDate}`)
+            // console.log(`end: ${formattedEndDate}`)
         }
     }, [event]);
 
@@ -44,19 +48,41 @@ const EventForm = ({ event: originalEvent, onClose }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setEvent(prevEvent => ({
-            ...prevEvent,
+        setEvent(prev => ({
+            ...prev,
             [name]: value
         }));
-        console.log(event)
+        
     };
+
+    const handleStartChange = (e) => {
+        const newDate = e.target.value;
+        setEvent(prev => ({
+            ...prev, 
+            start: newDate
+        }))
+
+        setStartDate(newDate)
+
+    }
+
+    const handleEndChange = (e) => {
+        const newDate = e.target.value;
+        setEvent(prev => ({
+            ...prev, 
+            end: newDate
+        }))
+
+        setEndDate(newDate)
+
+    }
 
     const handleLocationChange = (e) => {
         const { name, value } = e.target;
-        setEvent(prevEvent => ({
-            ...prevEvent,
+        setEvent(prev => ({
+            ...prev,
             location: {
-                ...prevEvent.location,
+                ...prev.location,
                 [name]: value
             }
         }));
@@ -68,30 +94,34 @@ const EventForm = ({ event: originalEvent, onClose }) => {
     }
 
 
+    // const handleGuestClick = () => {
+    //     if(addEventThenGuests){
+    //         setGuestFormMode(true)
+    //     } 
+    // }
 
-    const handleSubmit = (e) => {
+    // const handleGuestSubmit = () => {
+    //     setGuestFormMode(true)
 
-        e.preventDefault();
-
-        // if (id > 0) {
-        //     updateEvent();
-        // } else {
-        //     addAEvent();
-        // }
-    }
-
-    const handleGuestClick = () => {
-        setGuestFormMode(true)
-    }
+    // }
 
     const closeGuestForm = () => {
         setGuestFormMode(false)
     }
 
-    // need add to return event ID (event created, then guest list)
+    const handleSubmit = (e) => {
 
-    // const addEvent = () => {
+        e.preventDefault();
+        // console.log(event)
+        if (event.eventId > 0) {
+            updateEvent();
+        } else {
+            addEvent();
+        }
+    }
 
+    // const hasConflicts = () =>{
+        
     //     const init = {
     //         method: 'POST',
     //         headers: {
@@ -99,7 +129,7 @@ const EventForm = ({ event: originalEvent, onClose }) => {
     //         },
     //         body: JSON.stringify(event)
     //     };
-    //     fetch(url, init)
+    //     fetch(conflictUrl, init)
     //         .then(response => {
     //             if (response.status === 201 || response.status === 400) {
     //                 return response.json();
@@ -115,39 +145,74 @@ const EventForm = ({ event: originalEvent, onClose }) => {
     //             }
     //         })
     //         .catch(console.log)
+
     // }
 
-    // const updateEvent = () => {
+    // need add to return event ID (event created, then guest list)
 
-    //     event.eventId = id;
+    const addEvent = () => {
 
-    //     const init = {
-    //         method: 'PUT',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(event)
-    //     };
+        const init = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(event)
+        };
+        fetch(postUrl, init)
+            .then(response => {
+                if (response.status === 201 || response.status === 400) {
+                    return response.json();
+                } else {
+                    return Promise.reject(`Unexpected status code: ${response.status}`);
+                }
+            })
+            .then(data => {
+                if (data.eventId) {
+                    console.log(data.eventId)
+                    setEvent(data)
+                    setGuestFormMode(true)
+                    // return true;                    
+                } else {
+                    setErrors(data);
+                    // console.log(errors)
+                }
+            })
+            .catch(console.log)
+    }
 
-    //     fetch(`${url}/${id}`, init)
-    //         .then(response => {
-    //             if (response.status === 204) {
-    //                 return null;
-    //             } else if (response.status === 400) {
-    //                 return response.json();
-    //             } else {
-    //                 return Promise.reject(`Unexpected status code: ${response.status}`);
-    //             }
-    //         })
-    //         .then(data => {
-    //             if (!data) {
-    //                 navigate('/');
-    //             } else {
-    //                 setErrors(data);
-    //             }
-    //         })
-    //         .catch(console.log);
-    // }
+    const updateEvent = () => {
+
+        // event.eventId = id;
+
+        const init = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(event)
+        };
+
+        fetch(`${putUrl}/${event.eventId}`, init)
+            .then(response => {
+                if (response.status === 204) {
+                    return null;
+                } else if (response.status === 400) {
+                    return response.json();
+                } else {
+                    return Promise.reject(`Unexpected status code: ${response.status}`);
+                }
+            })
+            .then(data => {
+                if (!data) {
+                    window.alert('Event successsfully updated. :)');
+                    onClose();
+                } else {
+                    setErrors(data);
+                }
+            })
+            .catch(console.log);
+    }
 
 
     return (
@@ -199,7 +264,7 @@ const EventForm = ({ event: originalEvent, onClose }) => {
                                     type='datetime-local'
                                     className='form-control'
                                     value={startDate}
-                                    onChange={e => setStartDate(e.target.value)}
+                                    onChange={handleStartChange}
                                 />
                             </fieldset>
                             <fieldset>
@@ -210,7 +275,7 @@ const EventForm = ({ event: originalEvent, onClose }) => {
                                     type='datetime-local'
                                     className='form-control'
                                     value={endDate}
-                                    onChange={e => setEndDate(e.target.value)}
+                                    onChange={handleEndChange}
                                 />
                             </fieldset>
 
@@ -285,9 +350,9 @@ const EventForm = ({ event: originalEvent, onClose }) => {
                             </fieldset>
                             <div className='form-btn-container'>
                                 {/* creates event */}
-                                <button className='btn form-btn btn-blue' type='submit'>Submit</button>
+                                <button className='btn form-btn btn-blue' type='submit'>Submit/Add Guests</button>
                                 {/* creates event and returns ID/routes to guestlist  */}
-                                <button className='btn form-btn btn-blue' type='add-guests' onClick={handleGuestClick}>Guests</button>
+                                {/* <button className='btn form-btn btn-blue' type='submit' onClick={handleGuestClick}>Guests</button> */}
                                 {/* cancels everything */}
                                 <Link className='btn form-btn btn-grey' type='button' onClick={onClose}>Cancel</Link>
                             </div>
