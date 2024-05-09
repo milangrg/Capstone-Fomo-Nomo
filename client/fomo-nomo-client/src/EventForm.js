@@ -169,21 +169,17 @@ const EventForm = ({ event: originalEvent, onClose }) => {
             })
             .then(data => {
                 if (data.eventId) {
-                    // console.log(data.eventId)
                     setEvent(data)
-                    setGuestFormMode(true)
-                    // return true;                    
+                    setGuestFormMode(true)               
                 } else {
                     setErrors(data);
-                    // console.log(errors)
+                    console.log(data)
                 }
             })
             .catch(console.log)
     }
 
     const updateEvent = () => {
-
-        // event.eventId = id;
 
         const init = {
             method: 'PUT',
@@ -205,8 +201,7 @@ const EventForm = ({ event: originalEvent, onClose }) => {
             })
             .then(data => {
                 if (!data) {
-                    window.alert('Event successsfully updated. :)');
-                    onClose();
+                    setGuestFormMode(true); 
                 } else {
                     setErrors(data);
                 }
@@ -224,7 +219,7 @@ const EventForm = ({ event: originalEvent, onClose }) => {
                     <div className='form-data'>
                         <h1 className='form-header'>{headerText}</h1>
                         {errors.length > 0 && (
-                            <div className='alert error-display'>
+                            <div className='alert-error-display'>
                                 <span>The following errors were found:</span>
                                 <ul>
                                     {errors.map(error => (
