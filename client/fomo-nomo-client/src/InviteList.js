@@ -15,23 +15,40 @@ function InviteList() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   // ADDED 
   const [selectedInvite, setSelectedInvite] = useState(null);
-  
 
   const url = 'http://localhost:8080/api/invitation/invites/1'
 
-  useEffect(() => {
-      fetch(url)
-          .then(response => {
-              if (response.status === 200) {
-                  return response.json();
-              } else {
-                  return Promise.reject(`Unexpected status code: ${response.status}`);
-              }
-          })
-          .then(data => setInvites(data))
-          .catch(console.log)
+  // useEffect(() => {
+  //     fetch(url)
+  //         .then(response => {
+  //             if (response.status === 200) {
+  //                 return response.json();
+  //             } else {
+  //                 return Promise.reject(`Unexpected status code: ${response.status}`);
+  //             }
+  //         })
+  //         .then(data => setInvites(data))
+  //         .catch(console.log)
 
+  // }, []);
+
+  useEffect(() => {
+    getInvites();
   }, []);
+
+
+  const getInvites = () => {
+    fetch(url)
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          return Promise.reject(`Unexpected status code: ${response.status}`);
+        }
+      })
+      .then(data => setInvites(data))
+      .catch(console.log)
+  }
 
   const accepted = invites.filter(i => i.status === 'ACCEPTED');
   const pending = invites.filter(i => i.status === 'PENDING');
@@ -43,6 +60,7 @@ function InviteList() {
 
   const closePopup = () => {
     setSelectedEvent(null);
+    getInvites();
   };
 
   const handleSelect = (invite) => {
