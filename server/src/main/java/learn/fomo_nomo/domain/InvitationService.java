@@ -142,7 +142,7 @@ public class InvitationService {
                         ( (event.getEnd().isEqual(currEvent.getEnd()) ||
                                 event.getEnd().isBefore(currEvent.getEnd()) || event.getEnd().isAfter(currEvent.getEnd()) ) )
                 ) {
-                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    result.addMessage(String.format("This event conflicts with another event in your calendar [%s]",currEvent.getTitle()), ResultType.INVALID);
                     return result;
                 }
 
@@ -152,35 +152,35 @@ public class InvitationService {
                         ( (event.getStart().isEqual(currEvent.getStart()) ||
                                 event.getStart().isBefore(currEvent.getStart()) || event.getStart().isAfter(currEvent.getStart()) ) )
                 ) {
-                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    result.addMessage(String.format("This event conflicts with another event in your calendar [%s]", currEvent.getTitle()), ResultType.INVALID);
                     return result;
                 }
 
                 // [ event  ]
                 //   (curr)
                 if (event.getStart().isBefore(currEvent.getStart()) && event.getEnd().isAfter(currEvent.getEnd())) {
-                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    result.addMessage(String.format("This event conflicts with another event in your calendar [%s]", currEvent.getTitle()), ResultType.INVALID);
                     return result;
                 }
 
                 //    [event]
                 //  (   curr   )
                 if (event.getStart().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())) {
-                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    result.addMessage(String.format("This event conflicts with another event in your calendar [%s]", currEvent.getTitle()), ResultType.INVALID);
                     return result;
                 }
 
                 // [event]
                 //    (curr)
                 if (event.getEnd().isAfter(currEvent.getStart()) && event.getEnd().isBefore(currEvent.getEnd())) {
-                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    result.addMessage(String.format("This event conflicts with another event in your calendar [%s]", currEvent.getTitle()), ResultType.INVALID);
                     return result;
                 }
 
                 //    [event]
                 //  (curr)
                 if (event.getStart().isAfter(currEvent.getStart()) && event.getStart().isBefore(currEvent.getEnd())) {
-                    result.addMessage("Unable to accept, this event conflicts with another event in your calender.", ResultType.INVALID);
+                    result.addMessage(String.format("This event conflicts with another event in your calendar [%s]",currEvent.getTitle()), ResultType.INVALID);
                     return result;
                 }
             }

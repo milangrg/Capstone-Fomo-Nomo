@@ -4,41 +4,13 @@ import moment from 'moment';
 import { useState, useEffect } from 'react';
 
 
-
-// need functions to pull events i'm hosting or i've accepted only for this page and eventcalendar page
-
-// const defaultEvent = {
-//     "eventId": 0,
-//     "host": {
-//         "userId": 1,
-//         "firstName": "Alex",
-//         "lastName": "Carter",
-//         "email": "acarter1234@emailspot.com",
-//         "phone": "555-555-1234",
-//         "dob": "1995-08-02"
-//     },
-//     "title": "",
-//     "description": "",
-//     "location": {
-//         "locationId": 7,
-//         "address": "1550 Golf Path",
-//         "state": "NY",
-//         "city": "Saratoga Springs",
-//         "postal": "12866",
-//         "locationName": "The Golf Emporium"
-//     },
-//     "eventType": "",
-//     "start": new Date(),
-//     "end": new Date()
-// }
-
 const defaultEvent = {
     "eventId": 0,
     "host": {
         "userId": 1,
-        "firstName": "Alex",
-        "lastName": "Carter",
-        "email": "acarter1234@emailspot.com",
+        "firstName": "You",
+        "lastName": "Zer",
+        "email": "youzer@emailspot.com",
         "phone": "555-555-1234",
         "dob": "1995-08-02"
     },
@@ -70,36 +42,30 @@ function EventList() {
 
     const url = 'http://localhost:8080/api/invitation/1'
 
-    useEffect(() => {
+
+    const fetchEvents = () => {
         fetch(url)
-            .then(response => {
-                if (response.status === 200) {
-                    return response.json();
-                } else {
-                    return Promise.reject(`Unexpected status code: ${response.status}`);
-                }
+            .then(response => response.json())
+            .then(data => {
+                setEvents(data);
+                separateEvents(data);
             })
-            .then(data => setEvents(data))
-            .catch(console.log)
+            .catch(console.error);
+    };
 
-
+    useEffect(() => {
+        fetchEvents();
     }, []);
 
-    useEffect(() => {
-        if (events.length > 0) {
-            const hosting = events.filter(e => e.host.userId === 1);
-            const attending = events.filter(e => e.host.userId !== 1);
-            setHostingEvents(hosting);
-            setAttendingEvents(attending);
-        }
-    }, [events]);
+    const separateEvents = (events) => {
+        const hosting = events.filter(e => e.host.userId === 1);
+        const attending = events.filter(e => e.host.userId !== 1);
+        setHostingEvents(hosting);
+        setAttendingEvents(attending);
+    };
 
-
-    // console.log(hostingEvents)
-    const handleEventSelect = (e) => () => {
-        // console.log(e.title)
-        setSelectedEvent(e);
-
+    const handleEventSelect = event => () => {
+        setSelectedEvent(event);
     };
 
     const handleNewEventClick = () => {
@@ -108,14 +74,15 @@ function EventList() {
 
     const closePopup = () => {
         setSelectedEvent(null);
+        fetchEvents(); 
     };
 
     const closeEventForm = () => {
         setShowEventForm(false);
+        fetchEvents(); 
     };
 
     return (<>
-
 
         <div className='event-display'>
             <div className='event-display-content'>

@@ -46,8 +46,7 @@ body {
 }
 
 .alert-error-display{
-  max-width: 100%;
-    overflow-y: auto;  
+  max-width: 100%;  
     margin-bottom: 10px; 
     border: 1px solid #dc3545; 
     border-radius: 10px;
@@ -70,6 +69,7 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 1000;  
+  overflow-y: scroll;
 }
 
 .form-data {
@@ -84,10 +84,10 @@ body {
 }
 
 .form-guests {
-  display: flex;      /* Enables Flexbox */
-  flex-wrap: wrap;    /* Allows items to wrap onto the next line */
-  justify-content: flex-start; /* Aligns items to the start of the container */
-  align-items: center; /* Aligns items vertically */
+  display: flex;      
+  flex-wrap: wrap;    
+  justify-content: flex-start; 
+  align-items: center; 
   gap: 20px;    
   
 }
@@ -107,6 +107,7 @@ form{
   max-height: 80vh;
   overflow-y: scroll;
   padding-bottom: 5%;
+
 }
 
 .non-conflict{
@@ -126,8 +127,8 @@ form{
 /* CALENDAR */
 
 .calendar-container {
-  width: 75%;
-  height: 400px;
+  width: 70%;
+  height: 500px;
   margin: auto;
 }
 
@@ -135,6 +136,10 @@ form{
 .rbc-agenda-time-cell,
 .rbc-agenda-event-cell{
   color: white !important;
+}
+
+.calendar-container .rbc-slot-bg:hover {
+  background-color: rgba(56, 155, 236, 0.1); 
 }
 
 
@@ -157,8 +162,18 @@ form{
 
 /* NAV-BAR */
 
+.nav-welcome{
+  display:flex;
+  justify-content: space-between;
+}
+
+.welcome-div{
+ padding-right: 2%;
+ padding-top: 0.5%;
+}
+
+
 .nav-bar {
-  /* margin: 0.5% auto 0; */
   padding: 1px;
   display: table;
   width: 30%;
@@ -168,14 +183,15 @@ form{
   font-family: "Urbanist", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+  margin-left: 2%;
 }
 
 .nav-bar a {
   color: #000000;
-  text-decoration: none !important; /* Ensures the link is not underlined by default */
+  text-decoration: none !important; 
   letter-spacing: 0.05em;
   display: table-cell;
-  padding: 10px 0px;
+  padding: 10px 20px;
   position: relative;
 }
 
@@ -196,7 +212,6 @@ form{
   width: 60%;
   left: 20%;
 }
-
 
 
 

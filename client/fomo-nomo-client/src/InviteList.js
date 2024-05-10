@@ -2,47 +2,41 @@ import EventInfo from "./EventInfo";
 import moment from 'moment';
 import { useState, useEffect } from 'react';
 
-// const url = /api/invitation
-// /invites/1(userId)
-
-
-// need to pull actual invite list and attached events (including guest list)
-// need functions to change statuses of invite 
-
 function InviteList() {
 
   const [invites, setInvites] = useState([])
   const [selectedEvent, setSelectedEvent] = useState(null);
-  // ADDED 
   const [selectedInvite, setSelectedInvite] = useState(null);
-  
 
   const url = 'http://localhost:8080/api/invitation/invites/1'
 
-  useEffect(() => {
-      fetch(url)
-          .then(response => {
-              if (response.status === 200) {
-                  return response.json();
-              } else {
-                  return Promise.reject(`Unexpected status code: ${response.status}`);
-              }
-          })
-          .then(data => setInvites(data))
-          .catch(console.log)
 
+  useEffect(() => {
+    getInvites();
   }, []);
+
+
+  const getInvites = () => {
+    fetch(url)
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          return Promise.reject(`Unexpected status code: ${response.status}`);
+        }
+      })
+      .then(data => setInvites(data))
+      .catch(console.log)
+  }
 
   const accepted = invites.filter(i => i.status === 'ACCEPTED');
   const pending = invites.filter(i => i.status === 'PENDING');
   const declined = invites.filter(i => i.status === 'DECLINED');
 
-  // const handleEventSelect = event => {
-  //   setSelectedEvent(event);
-  // };
 
   const closePopup = () => {
     setSelectedEvent(null);
+    getInvites();
   };
 
   const handleSelect = (invite) => {
@@ -59,7 +53,6 @@ function InviteList() {
           </div>
           <div>
             {pending.map(i => (
-              // <div key={i.invitationId} onClick={() => handleEventSelect(i.event)} className='lined-li pending'>{i.event.title}: {moment(i.event.start).format('MMMM Do, YYYY')}
               <div key={i.invitationId} onClick={() => handleSelect(i)} className='lined-li'><strong>{i.event.title}: {moment(i.event.start).format('MMMM Do, YYYY')}</strong>
                 <span className='invite-list-buttons'>
                   <button className='btn btn-sm btn-list btn-invite'>View</button>
@@ -76,7 +69,6 @@ function InviteList() {
           </div>
           <div>
             {accepted.map(i => (
-              // <div key={i.invitationId} onClick={() => handleEventSelect(i.event)} className='lined-li'>{i.event.title}: {moment(i.event.start).format('MMMM Do, YYYY')}
               <div key={i.invitationId} onClick={() => handleSelect(i)} className='lined-li'>{i.event.title}: {moment(i.event.start).format('MMMM Do, YYYY')}
                 <span className='invite-list-buttons'>
                   <button className='btn btn-sm btn-list btn-invite'>View</button>
@@ -93,7 +85,6 @@ function InviteList() {
           </div>
           <div>
             {declined.map(i => (
-              // <div key={i.invitationId} onClick={() => handleEventSelect(i.event)} className='lined-li'>{i.event.title}: {moment(i.event.start).format('MMMM Do, YYYY')}
               <div key={i.invitationId} onClick={() => handleSelect(i)} className='lined-li'>{i.event.title}: {moment(i.event.start).format('MMMM Do, YYYY')}
                 <span className='invite-list-buttons'>
                   <button className='btn btn-sm btn-list btn-invite'>View</button>
