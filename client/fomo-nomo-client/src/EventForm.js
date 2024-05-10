@@ -1,23 +1,20 @@
 import moment from 'moment';
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import GuestForm from './GuestForm';
 
 const EventForm = ({ event: originalEvent, onClose }) => {
 
     const [event, setEvent] = useState(originalEvent);
     const [errors, setErrors] = useState([]);
-    // const [startTime, setStartTime] = useState();
     const [startDate, setStartDate] = useState();
-    // const [endTime, setEndTime] = useState();
     const [endDate, setEndDate] = useState();
     const [guestFormMode, setGuestFormMode] = useState(false);
-    // const navigate = useNavigate();
+
 
     const postUrl = 'http://localhost:8080/api/event/1';
     const putUrl = 'http://localhost:8080/api/event'
-    // const { id } = useParams();
-    // const conflictUrl = 'http://localhost:8080/api/invitation/conflict/1'
+
 
 
     useEffect(() => {
@@ -25,26 +22,9 @@ const EventForm = ({ event: originalEvent, onClose }) => {
             const formattedStartDate = moment(event.start).format('YYYY-MM-DDTHH:mm');
             const formattedEndDate = moment(event.end).format('YYYY-MM-DDTHH:mm');
             setStartDate(formattedStartDate);
-            // setStartTime(formattedStartDate);
             setEndDate(formattedEndDate);
-            // setEndTime(formattedEndDate);
-            // console.log(`start: ${formattedStartDate}`)
-            // console.log(`end: ${formattedEndDate}`)
         }
     }, [event]);
-
-
-    //need function to add event, cancel event, and update event
-    //create event must send out invites if they exist as well 
-    //add guest functionalities 
-
-    // const url = 'http://localhost:8080/api/event';
-    // const navigate = useNavigate();
-    // const { id } = useParams();
-
-
-    let headerText = event.eventId ? 'Update Event' : 'Add Event';
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -94,17 +74,6 @@ const EventForm = ({ event: originalEvent, onClose }) => {
     }
 
 
-    // const handleGuestClick = () => {
-    //     if(addEventThenGuests){
-    //         setGuestFormMode(true)
-    //     } 
-    // }
-
-    // const handleGuestSubmit = () => {
-    //     setGuestFormMode(true)
-
-    // }
-
     const closeGuestForm = () => {
         setGuestFormMode(false)
     }
@@ -112,7 +81,6 @@ const EventForm = ({ event: originalEvent, onClose }) => {
     const handleSubmit = (e) => {
 
         e.preventDefault();
-        // console.log(event)
         if (event.eventId > 0) {
             updateEvent();
         } else {
@@ -120,35 +88,6 @@ const EventForm = ({ event: originalEvent, onClose }) => {
         }
     }
 
-    // const hasConflicts = () =>{
-        
-    //     const init = {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(event)
-    //     };
-    //     fetch(conflictUrl, init)
-    //         .then(response => {
-    //             if (response.status === 201 || response.status === 400) {
-    //                 return response.json();
-    //             } else {
-    //                 return Promise.reject(`Unexpected status code: ${response.status}`);
-    //             }
-    //         })
-    //         .then(data => {
-    //             if (data.agentId) {
-    //                 navigate('/')
-    //             } else {
-    //                 setErrors(data);
-    //             }
-    //         })
-    //         .catch(console.log)
-
-    // }
-
-    // need add to return event ID (event created, then guest list)
 
     const addEvent = () => {
 
@@ -209,6 +148,7 @@ const EventForm = ({ event: originalEvent, onClose }) => {
             .catch(console.log);
     }
 
+    let headerText = event.eventId ? 'Update Event' : 'Add Event';
 
     return (
         <>
@@ -344,11 +284,9 @@ const EventForm = ({ event: originalEvent, onClose }) => {
                                 <label htmlFor="personal">Personal</label><br />
                             </fieldset>
                             <div className='form-btn-container'>
-                                {/* creates event */}
+
                                 <button className='btn form-btn btn-blue' type='submit'>Submit/Add Guests</button>
-                                {/* creates event and returns ID/routes to guestlist  */}
-                                {/* <button className='btn form-btn btn-blue' type='submit' onClick={handleGuestClick}>Guests</button> */}
-                                {/* cancels everything */}
+
                                 <Link className='btn form-btn btn-grey' type='button' onClick={onClose}>Cancel</Link>
                             </div>
                         </form>

@@ -17,7 +17,6 @@ const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
     const deleteUrl = 'http://localhost:8080/api/event'
     const allUsersUrl = 'http://localhost:8080/api/user'
 
-    // LIST OF INVITEES AND STATUSES (send eventId)
 
     useEffect(() => {
         fetch(`${guestListUrl}/${event.eventId}`)
@@ -29,7 +28,7 @@ const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
                 }
             })
             .then(data => setGuestList(data))
-            // .then(data => console.log(data))
+
             .catch(console.log)
   
     }, [guestListUrl, event.eventId]);
@@ -73,12 +72,6 @@ const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
 
     }, [allUsers, guestList]);
 
-
-    // GET FOR CONFLICTING EVENTS 
-
-
-
-    // console.log(invite)
     
 
     const handleEdit = () => {
@@ -218,11 +211,6 @@ const EventInfo = ({ event, onClose, fromInvite, invite = {}}) => {
                                     <button className='btn btn-yellow' onClick={handleRSVP(false)}>Decline</button>
                                 </>
                             )}
-                            {/* {event.host.userId !== 1 && !fromInvite && (
-                                <>
-                                    <button className='btn btn-yellow' onClick={handleRSVP(false)}>Decline Event</button>
-                                </>
-                            )} */}
                             {event.host.userId === 1 && (
 
                                 <>

@@ -1,11 +1,13 @@
 import EventCalendar from './EventCalendar';
 
-function Home() {
+
+function Home({holidayCalendar}) {
+
 
     return (
         <>
             <section>
-                <EventCalendar />
+                <EventCalendar holidayCalendar={holidayCalendar} />
             </section>
         </>
     )

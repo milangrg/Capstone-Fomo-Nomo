@@ -1,25 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const GuestForm = ({ event, onClose }) => {
 
-
-    // GET ALL USERS 
-
-    // GET ALL INVITED USERS (IF ANY)
-
-    // CHECK AVAILABILITY 
-
-    // DELETE EVENT 
-
-    // SEND GUESTLIST 
-
-
-
-
     const [allGuests, setAllGuests] = useState([]);
-    const [invitedGuests, setInvitedGuests] = useState([]);
-    const [inviteList, setInviteList] = useState([]);
     const [errors, setErrors] = useState([]);
     const [conflicts, setConflicts] = useState([]);
     const [conflictFree, setConflictFree] = useState(false);
@@ -27,7 +11,6 @@ const GuestForm = ({ event, onClose }) => {
     const deleteUrl = 'http://localhost:8080/api/event'
     const conflictUrl = 'http://localhost:8080/api/invitation/conflict/1'
     const allUsersUrl = 'http://localhost:8080/api/user/guests/1'
-    const invitedGuestsUrl = 'http://localhost:8080/api/event/guests'
     const sendInvitesUrl = 'http://localhost:8080/api/invitation/invites/1'
 
     const defaultInvite = {
@@ -37,7 +20,6 @@ const GuestForm = ({ event, onClose }) => {
         status: 'PENDING'
     }
 
-    // DON'T WANT HOST 
     useEffect(() => {
         fetch(allUsersUrl)
             .then(response => {
@@ -47,7 +29,6 @@ const GuestForm = ({ event, onClose }) => {
                     return Promise.reject(`Unexpected status code: ${response.status}`);
                 }
             })
-            // .then(data => setAllGuests(data))
             .then(data => setInviteBools(data))
             .catch(console.log)
 
@@ -59,7 +40,6 @@ const GuestForm = ({ event, onClose }) => {
             isInvited: false
         }));
         setAllGuests(guestsPlusInvitedBool);
-
     }
 
     const handleInviteToggle = (id) => {
@@ -113,8 +93,8 @@ const GuestForm = ({ event, onClose }) => {
 
     };
 
-    const handleSkip = (msg) => {
-        generateSuccessMessage("Your event was successfully created. :)");
+    const handleSkip = () => {
+        generateSuccessMessage("Your operation was successful.");
     }
 
     const generateSuccessMessage = (msg) => {
@@ -146,7 +126,11 @@ const GuestForm = ({ event, onClose }) => {
 
         e.preventDefault();
         const finalGuestList = allGuests.filter(g => g.isInvited);
-        generateInviteList(finalGuestList);
+        if (finalGuestList.length === 0) {
+            handleSkip();
+        } else {
+            generateInviteList(finalGuestList);
+        }
 
     }
 
@@ -161,7 +145,6 @@ const GuestForm = ({ event, onClose }) => {
         })
 
         sendInviteList(inviteList)
-
     }
 
     const sendInviteList = (inviteList) => {
@@ -182,15 +165,14 @@ const GuestForm = ({ event, onClose }) => {
                 }
             })
             .then(data => {
-                if(data[0].invitationId > 0) {
-                    generateSuccessMessage('Invitations sent!')                   
+                if (data[0].invitationId > 0) {
+                    generateSuccessMessage('Invitations sent!')
                 } else {
                     setErrors(data);
                     // console.log(errors)
                 }
             })
             .catch(console.log)
-
     }
 
     return (
@@ -231,7 +213,7 @@ const GuestForm = ({ event, onClose }) => {
                             <button className='btn form-btn btn-blue' type='submit'>Submit</button>
                             <button className='btn form-btn' type='button' onClick={handleCheckAvailability}>Check Availability</button>
                             <button className='btn form-btn' type='button' onClick={handleSkip}>Skip</button>
-                            <Link className='btn form-btn btn-grey' type='button' onClick={handleDeleteEvent}>Cancel Event Creation</Link>
+                            <Link className='btn form-btn btn-grey' type='button' onClick={handleDeleteEvent}>Cancel Event</Link>
                         </div>
 
                     </form>
